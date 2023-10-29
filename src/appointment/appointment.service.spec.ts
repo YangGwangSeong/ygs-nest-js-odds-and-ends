@@ -1,33 +1,43 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { PatientModule } from '../patient/patient.module';
+import { PatientService } from '../patient/patient.service';
 import { AppointmentService } from './appointment.service';
 
 describe('AppointmentService', () => {
 	let service: AppointmentService;
+	let patientService: PatientService;
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
+			imports: [PatientModule],
 			providers: [AppointmentService],
 		}).compile();
 
 		service = module.get<AppointmentService>(AppointmentService);
+		patientService = module.get(PatientService);
 	});
 
 	it('should be defined', () => {
 		expect(service).toBeDefined();
 	});
 
-	it('should schedule an unconfirmed appointment for a user on success', () => {
+	it('should schedule an unconfirmed appointment for a user on success', async () => {
 		const startTime = new Date('2022-01-01T14:00:00Z');
 		const endTime = new Date('2022-01-01T15:00:00Z');
 
+		// Using the `register` method to retrieve the new patient id
+		const { id: patientId } = await patientService.register({
+			name: 'John Doe',
+		});
+
 		const newAppointment = service.scheduleAppointment({
-			patientId: 1,
+			patientId,
 			startTime,
 			endTime,
 		});
 
 		expect(newAppointment).toEqual({
-			patientId: 1,
+			patientId,
 			startTime,
 			endTime,
 			confirmed: false,
@@ -115,5 +125,16 @@ describe('AppointmentService', () => {
 		);
 	});
 
-	// 여기까지가 단위테스트
+	it('should throw an error when the patient does not exist', async () => {
+		const startTime = new Date('2022-01-01T14:00:00Z');
+		const endTime = new Date('2022-01-01T15:00:00Z');
+
+		await expect(
+			service.scheduleAppointment({
+				patientId: 1,
+				startTime,
+				endTime,
+			}),
+		).rejects.toThrowError('Patient does not exist');
+	});
 });
