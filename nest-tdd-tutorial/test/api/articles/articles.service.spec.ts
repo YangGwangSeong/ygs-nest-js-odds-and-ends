@@ -1,16 +1,30 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ArticlesService } from '@/api/articles/articles.service';
+import {
+	ArticlesService,
+	CurrenciesService,
+} from '@/api/articles/articles.service';
 import { BadRequestException } from '@nestjs/common';
 
 describe('ArticlesService', () => {
 	let service: ArticlesService;
+	let currenciesService: CurrenciesService;
 
 	beforeEach(async () => {
+		const currenciesServiceMock = {
+			getCurrency: jest.fn(),
+		};
 		const module: TestingModule = await Test.createTestingModule({
-			providers: [ArticlesService],
+			providers: [
+				ArticlesService,
+				{
+					provide: CurrenciesService,
+					useFactory: () => currenciesServiceMock,
+				},
+			],
 		}).compile();
 
 		service = module.get<ArticlesService>(ArticlesService);
+		currenciesService = module.get<CurrenciesService>(CurrenciesService);
 	});
 
 	it('should be defined', () => {
@@ -28,6 +42,11 @@ describe('ArticlesService', () => {
 			await expect(
 				service.convertAmount({ from: 'USD', to: 'BRL', amount: 1 }),
 			).resolves.not.toThrow();
+		});
+
+		it('should be called getCurrency twice', async () => {
+			await service.convertAmount({ from: 'USD', to: 'BRL', amount: 1 });
+			await expect(currenciesService.getCurrency).toBeCalledTimes(2);
 		});
 	});
 });
