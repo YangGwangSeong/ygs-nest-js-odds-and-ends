@@ -1,10 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import {
-	ArticlesService,
-	CurrenciesService,
-} from '@/api/articles/articles.service';
+import { ArticlesService } from '@/api/articles/articles.service';
 import { BadRequestException } from '@nestjs/common';
 import { ExchangeInputType } from '@/api/articles/types/exchange-input.type';
+import { CurrenciesService } from '@/api/currencies/currencies.service';
 
 describe('ArticlesService', () => {
 	let service: ArticlesService;
