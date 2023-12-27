@@ -8,6 +8,7 @@ import { InternalServerErrorException } from '@nestjs/common';
 describe('CurrenciesService', () => {
 	let service: CurrenciesService;
 	let repository: CurrenciesRepository;
+	let mockData: { currency: string; value: number };
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
@@ -15,13 +16,17 @@ describe('CurrenciesService', () => {
 				CurrenciesService,
 				{
 					provide: CurrenciesRepository,
-					useFactory: () => ({ getCurrency: jest.fn() }),
+					useFactory: () => ({
+						getCurrency: jest.fn(),
+						createCurrency: jest.fn(),
+					}),
 				},
 			],
 		}).compile();
 
 		service = module.get<CurrenciesService>(CurrenciesService);
 		repository = module.get<CurrenciesRepository>(CurrenciesRepository);
+		mockData = { currency: 'USD', value: 1 };
 	});
 
 	it('should be defined', () => {
@@ -50,14 +55,24 @@ describe('CurrenciesService', () => {
 		});
 
 		it('should be return when repository return', async () => {
-			(repository.getCurrency as jest.Mock).mockReturnValue({
-				currency: 'USD',
-				value: 1,
-			});
-			expect(await service.getCurrency('USD')).toEqual({
-				currency: 'USD',
-				value: 1,
-			});
+			(repository.getCurrency as jest.Mock).mockReturnValue(mockData);
+			expect(await service.getCurrency('USD')).toEqual(mockData);
+		});
+	});
+
+	describe('createCurrency()', () => {
+		it('should be throw if repository throw', async () => {
+			(repository.createCurrency as jest.Mock).mockRejectedValue(
+				new InternalServerErrorException(),
+			);
+			mockData.currency = 'INVALID';
+			await expect(service.createCurrency(mockData)).rejects.toThrow(
+				new InternalServerErrorException(),
+			);
+		});
+
+		it('should be not throw if repository retunrs', async () => {
+			await expect(service.createCurrency(mockData)).resolves.not.toThrow();
 		});
 	});
 });
