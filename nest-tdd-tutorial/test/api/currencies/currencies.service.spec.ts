@@ -18,6 +18,7 @@ describe('CurrenciesService', () => {
 			getCurrency: jest.fn(),
 			createCurrency: jest.fn(),
 			updateCurrency: jest.fn(),
+			deleteCurrency: jest.fn(),
 		};
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
@@ -141,6 +142,32 @@ describe('CurrenciesService', () => {
 		it('should be return when repository return', async () => {
 			(repository.updateCurrency as jest.Mock).mockReturnValue(mockData);
 			expect(await service.updateCurrency(mockData)).toEqual(mockData);
+		});
+	});
+
+	// 4번째 update
+	describe('deleteCurrency()', () => {
+		// service와 repository 에러 체크
+		// repository 모킹함수 deleteCurrency 생성
+		it('should be throw if repository throw', async () => {
+			(repository.deleteCurrency as jest.Mock).mockRejectedValue(
+				new InternalServerErrorException(),
+			);
+
+			await expect(service.deleteCurrency('INVALID')).rejects.toThrow(
+				new InternalServerErrorException(),
+			);
+		});
+
+		// service와 repository 에러가 없는지 확인
+		it('should be not throw if repository retunrs', async () => {
+			await expect(service.deleteCurrency('USD')).resolves.not.toThrow();
+		});
+
+		// serivce와 repository의 파라미터가 값이 맞는지 확인
+		it('should be called repository with correct params', async () => {
+			await service.deleteCurrency('USD');
+			expect(repository.deleteCurrency).toBeCalledWith('USD');
 		});
 	});
 });
