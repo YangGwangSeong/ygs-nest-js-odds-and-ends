@@ -14,15 +14,17 @@ describe('CurrenciesService', () => {
 	let mockData: { currency: string; value: number };
 
 	beforeEach(async () => {
+		const currenciesRepositoryMock = {
+			getCurrency: jest.fn(),
+			createCurrency: jest.fn(),
+			updateCurrency: jest.fn(),
+		};
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
 				CurrenciesService,
 				{
 					provide: CurrenciesRepository,
-					useFactory: () => ({
-						getCurrency: jest.fn(),
-						createCurrency: jest.fn(),
-					}),
+					useFactory: () => currenciesRepositoryMock,
 				},
 			],
 		}).compile();
@@ -84,6 +86,11 @@ describe('CurrenciesService', () => {
 			await expect(service.createCurrency(mockData)).resolves.not.toThrow();
 		});
 
+		it('should be called repository with correct params', async () => {
+			await service.createCurrency(mockData);
+			expect(repository.createCurrency).toBeCalledWith(mockData);
+		});
+
 		// value값이 0보다 작을경우 에러 테스트 코드
 		it('should be throw if value <= 0', async () => {
 			mockData.value = 0;
@@ -93,8 +100,47 @@ describe('CurrenciesService', () => {
 		});
 
 		it('should be return when repository return', async () => {
-			(repository.getCurrency as jest.Mock).mockReturnValue(mockData);
-			expect(await service.getCurrency('USD')).toEqual(mockData);
+			(repository.createCurrency as jest.Mock).mockReturnValue(mockData);
+			expect(await service.createCurrency(mockData)).toEqual(mockData);
+		});
+	});
+
+	// 3번째 update
+	describe('updateCurrency()', () => {
+		// repository의 메소드가 없으면 에러 던짐
+		it('should be throw if repository throw', async () => {
+			(repository.updateCurrency as jest.Mock).mockRejectedValue(
+				new InternalServerErrorException(),
+			);
+			mockData.currency = 'INVALID';
+			await expect(service.updateCurrency(mockData)).rejects.toThrow(
+				new InternalServerErrorException(),
+			);
+		});
+
+		// 에러 없고 repository리턴값 있을때
+		it('should be not throw if repository retunrs', async () => {
+			await expect(service.updateCurrency(mockData)).resolves.not.toThrow();
+		});
+
+		// repository의 파라미터가 값이 맞는지 확인
+		it('should be called repository with correct params', async () => {
+			await service.updateCurrency(mockData);
+			expect(repository.updateCurrency).toBeCalledWith(mockData);
+		});
+
+		// value값이 0보다 작을경우 에러 테스트 코드
+		it('should be throw if value <= 0', async () => {
+			mockData.value = 0;
+			await expect(service.updateCurrency(mockData)).rejects.toThrow(
+				new BadRequestException('The value must be greater zero.'),
+			);
+		});
+
+		// 모킹함수 repository의 return값 확인 테스트 코드
+		it('should be return when repository return', async () => {
+			(repository.updateCurrency as jest.Mock).mockReturnValue(mockData);
+			expect(await service.updateCurrency(mockData)).toEqual(mockData);
 		});
 	});
 });
