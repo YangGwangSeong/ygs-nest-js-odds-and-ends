@@ -1,17 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import {
-	CurrenciesRepository,
-	CurrenciesService,
-} from '@/api/currencies/currencies.service';
+import { CurrenciesService } from '@/api/currencies/currencies.service';
 import {
 	BadRequestException,
 	InternalServerErrorException,
 } from '@nestjs/common';
-
+import { CurrenciesRepository } from '@/api/currencies/currencies.repository';
+import { Currencies } from '@/api/currencies/currencies.entity';
+/**
+ * CurrenciesService 테스트코드를 작성할때
+ * entity class와 repository class를 service에서 작성해서 만든 후에
+ * entity.ts 파일과 reposiotry.ts 파일을 생성 한 후 나눴다.
+ */
 describe('CurrenciesService', () => {
 	let service: CurrenciesService;
 	let repository: CurrenciesRepository;
-	let mockData: { currency: string; value: number };
+	let mockData: Currencies;
 
 	beforeEach(async () => {
 		const currenciesRepositoryMock = {
