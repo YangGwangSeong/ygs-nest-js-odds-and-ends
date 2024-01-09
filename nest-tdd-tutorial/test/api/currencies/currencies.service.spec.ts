@@ -11,6 +11,10 @@ import { Currencies } from '@/api/currencies/currencies.entity';
  * entity class와 repository class를 service에서 작성해서 만든 후에
  * entity.ts 파일과 reposiotry.ts 파일을 생성 한 후 나눴다.
  */
+/**
+ * service 파일의 단위 테스트를 작성 할 때 repository를 바로 생성하는게 아니라
+ * repository class를 그냥 만들어서 mocking해서 사용함.
+ */
 describe('CurrenciesService', () => {
 	let service: CurrenciesService;
 	let repository: CurrenciesRepository;
