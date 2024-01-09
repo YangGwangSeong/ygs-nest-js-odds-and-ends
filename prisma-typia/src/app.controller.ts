@@ -14,6 +14,12 @@ export class AppController {
 
   @Post()
   postPosts(@Body() dto: ArticleDto) {
+    try {
+      const result = typia.validate(dto);
+    } catch (error) {
+      console.log(error);
+    }
+
     return true;
   }
 }
