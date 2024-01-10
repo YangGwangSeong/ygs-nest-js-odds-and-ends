@@ -2,6 +2,7 @@ import {
 	BadRequestException,
 	Injectable,
 	InternalServerErrorException,
+	NotFoundException,
 } from '@nestjs/common';
 import { CurrenciesRepository } from './currencies.repository';
 import { Currencies } from './currencies.entity';

@@ -1,19 +1,25 @@
 import { Repository } from 'typeorm';
 import { Currencies } from './currencies.entity';
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class CurrenciesRepository extends Repository<Currencies> {
-	// constructor(
-	// 	@InjectRepository(Currencies)
-	// 	private readonly repository: Repository<Currencies>,
-	// ) {
-	// 	super(repository.target, repository.manager, repository.queryRunner);
-	// }
+	constructor(
+		@InjectRepository(Currencies)
+		private readonly repository: Repository<Currencies>,
+	) {
+		super(repository.target, repository.manager, repository.queryRunner);
+	}
 
 	async getCurrency(currency: string): Promise<Currencies> {
-		return new Currencies();
+		const result = await this.repository.findOneBy({ currency });
+
+		if (!result) {
+			throw new InternalServerErrorException();
+		}
+
+		return result;
 	}
 
 	async createCurrency({
