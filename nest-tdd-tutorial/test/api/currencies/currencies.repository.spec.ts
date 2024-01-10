@@ -43,8 +43,8 @@ describe('CurrenciesRepository', () => {
 
 	// 2. getCurrency 메소드
 	describe('getCurrency()', () => {
-		// repository findOneBy
-		it('should be called findOne with correct params', async () => {
+		// 2-1. repository findOneBy 파라미터값 맞는지
+		it('should be called findOneBy with correct params', async () => {
 			(currenciesRepository.findOneBy as jest.Mock).mockReturnValue({});
 			await reposiotry.getCurrency('USD');
 			expect(currenciesRepository.findOneBy).toBeCalledWith({
@@ -52,12 +52,19 @@ describe('CurrenciesRepository', () => {
 			});
 		});
 
-		// 에러 발생하는 곳
-		it('should be throw findOne returns empty', async () => {
-			(currenciesRepository.findOneBy as jest.Mock).mockReturnValue(undefined);
+		// 2-2. findOneBy의 return값이 null일때 에러 테스트
+		it('should be throw findOneBy returns empty', async () => {
+			(currenciesRepository.findOneBy as jest.Mock).mockReturnValue(null);
 			expect(reposiotry.getCurrency('USD')).rejects.toThrow(
 				new InternalServerErrorException(),
 			);
+		});
+
+		// 2-3. findOneBy 정상적으로 동작하는 return값 Promise 리턴 받으니까 await 붙여야함
+		it('should be returns when findOne returns', async () => {
+			const mockData = { currency: 'USD', value: 1 } as Currencies;
+			(currenciesRepository.findOneBy as jest.Mock).mockReturnValue(mockData);
+			expect(await reposiotry.getCurrency('USD')).toEqual(mockData);
 		});
 	});
 });
