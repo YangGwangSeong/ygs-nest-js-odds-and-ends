@@ -141,5 +141,16 @@ describe('CurrenciesRepository', () => {
 			await reposiotry.updateCurrency(mockData);
 			expect(currenciesRepository.save).toBeCalledWith(mockData);
 		});
+
+		// 4-4 repository save 함수가 에러가 났을때
+		it('should be throw when save thorw', async () => {
+			currenciesRepository.findOneBy = jest.fn().mockReturnValue(mockData);
+			// 모킹 함수로 실패 했을때 에러를 던져줌
+			// mockRejectedValue와 mockReturnValue를 헷갈리면 안됨.
+			// mockRejectedValue는 모킹 함수의 return 값으로 에러를 던져 주는거고
+			// mockReturnValue는 value 값들을 던져줌
+			currenciesRepository.save = jest.fn().mockRejectedValue(new Error());
+			expect(reposiotry.updateCurrency(mockData)).rejects.toThrow();
+		});
 	});
 });
