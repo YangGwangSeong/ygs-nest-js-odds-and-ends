@@ -88,7 +88,24 @@ describe('CurrenciesRepository', () => {
 		it('should be throw when save thorw', async () => {
 			// 모킹 함수로 실패 했을때 에러를 던져줌
 			currenciesRepository.save = jest.fn().mockRejectedValue(new Error());
-			await expect(reposiotry.createCurrency(mockData)).rejects.toThrow();
+			expect(reposiotry.createCurrency(mockData)).rejects.toThrow();
+		});
+
+		// 3-4 repository createCurrency 메소드의 파라미터가 올바르지 않을떄 에러
+		it('should be throw if called with invalid params', async () => {
+			// entity에서 validate currency가 길이가 최소 3 최대 3가 아니면 에러
+			mockData.currency = 'INVALID';
+			expect(reposiotry.createCurrency(mockData)).rejects.toThrow();
+
+			// entity에서 validate value가 number가 아니면 에러
+			mockData.currency = 'USD';
+			mockData.value = 'INVALID' as any; // 에러를 발생 시키기 위해 타입 캐스팅
+			expect(reposiotry.createCurrency(mockData)).rejects.toThrow();
+		});
+
+		// 3-3 repository save 메소드가 성공 했을때 return 데이터
+		it('should be returns created data', async () => {
+			expect(await reposiotry.createCurrency(mockData)).toEqual(mockData);
 		});
 	});
 });

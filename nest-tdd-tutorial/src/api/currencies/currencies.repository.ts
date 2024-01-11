@@ -3,6 +3,7 @@ import { Currencies } from './currencies.entity';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CurrenciesInputType } from './types/currencies-input.type';
+import { validateOrReject } from 'class-validator';
 
 @Injectable()
 export class CurrenciesRepository extends Repository<Currencies> {
@@ -29,8 +30,15 @@ export class CurrenciesRepository extends Repository<Currencies> {
 		const createCurrency = new Currencies();
 		Object.assign(createCurrency, currenciesInputType);
 
-		await this.repository.save(createCurrency);
-		return new Currencies();
+		// save 되기전에 validate 체크 그 이후에 저장
+		try {
+			await validateOrReject(createCurrency);
+			await this.repository.save(createCurrency);
+		} catch (error) {
+			throw new InternalServerErrorException(error);
+		}
+
+		return createCurrency;
 	}
 
 	async updateCurrency({
