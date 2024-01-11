@@ -22,6 +22,7 @@ describe('CurrenciesRepository', () => {
 	beforeEach(async () => {
 		const CurrenciesRepositoryMock = {
 			findOneBy: jest.fn(),
+			save: jest.fn(),
 		};
 
 		const module: TestingModule = await Test.createTestingModule({
@@ -76,9 +77,9 @@ describe('CurrenciesRepository', () => {
 	describe('createCurrency()', () => {
 		// beforEach는 해당 테스트가 실행되기전에 콜백 함수안에 있는것들을 실행 해주는거
 		// save는 해당 테스트에서만 사용 되니까 해당 테스트 코드 안에서만 미리 불러올 수 있게 beforEach로 모킹 함수를 생성한것 같다!
-		beforeEach(() => {
-			currenciesRepository.save = jest.fn();
-		});
+		// beforeEach(() => {
+		// 	currenciesRepository.save = jest.fn();
+		// });
 
 		// 3-1 repository create 메소드 파라미터 맞는지
 		it('should be called save with correct params', async () => {
@@ -116,7 +117,7 @@ describe('CurrenciesRepository', () => {
 	describe('updateCurrency()', () => {
 		// 4-1. repository findOne 파라미터값 맞는지
 		it('should be called findOne with correct params', async () => {
-			currenciesRepository.findOneBy = jest.fn().mockReturnValue({});
+			currenciesRepository.findOneBy = jest.fn().mockReturnValue(mockData);
 			await reposiotry.updateCurrency(mockData);
 			expect(currenciesRepository.findOneBy).toBeCalledWith({
 				currency: 'USD',
@@ -129,6 +130,16 @@ describe('CurrenciesRepository', () => {
 			await expect(reposiotry.updateCurrency(mockData)).rejects.toThrow(
 				new NotFoundException(`The currency ${mockData.currency} not found!`),
 			);
+		});
+
+		// 4-3 updateCurrency 메소드의 파라미터와 repository.save함수의 파라미터가 같은지 확인
+		it('should be called save with correct params', async () => {
+			// 1. find로 해당 데이터 찾기
+			currenciesRepository.findOneBy = jest.fn().mockReturnValue(mockData);
+
+			currenciesRepository.save = jest.fn().mockReturnValue(mockData);
+			await reposiotry.updateCurrency(mockData);
+			expect(currenciesRepository.save).toBeCalledWith(mockData);
 		});
 	});
 });
