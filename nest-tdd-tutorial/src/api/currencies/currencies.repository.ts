@@ -1,6 +1,10 @@
 import { Repository } from 'typeorm';
 import { Currencies } from './currencies.entity';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+	Injectable,
+	InternalServerErrorException,
+	NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CurrenciesInputType } from './types/currencies-input.type';
 import { validateOrReject } from 'class-validator';
@@ -46,6 +50,10 @@ export class CurrenciesRepository extends Repository<Currencies> {
 		value,
 	}: CurrenciesInputType): Promise<Currencies> {
 		const result = await this.repository.findOneBy({ currency });
+
+		if (!result) {
+			throw new NotFoundException(`The currency ${currency} not found!`);
+		}
 
 		return new Currencies();
 	}
