@@ -152,5 +152,17 @@ describe('CurrenciesRepository', () => {
 			currenciesRepository.save = jest.fn().mockRejectedValue(new Error());
 			expect(reposiotry.updateCurrency(mockData)).rejects.toThrow();
 		});
+
+		// 4-5 updateCurrency 성공시 리턴 데이터
+		it('should be returns updated data', async () => {
+			let updateMockData = { currency: 'USD', value: 2 };
+
+			currenciesRepository.findOneBy = jest
+				.fn()
+				.mockReturnValue({ currency: 'USD', value: 1 }); // 변경전 데이터 {currency: 'USD', value: 1}
+			currenciesRepository.save = jest.fn().mockReturnValue({}); // 저장 성공 했을때 리턴값이 없음 void라 빈 객체
+			const result = await reposiotry.updateCurrency(updateMockData);
+			expect(result).toEqual(updateMockData); // 업데이트에 성공 했을때 리턴값이 {currency: 'USD', value: 2}인지 확인
+		});
 	});
 });
