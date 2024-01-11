@@ -2,6 +2,7 @@ import { Repository } from 'typeorm';
 import { Currencies } from './currencies.entity';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CurrenciesInputType } from './types/currencies-input.type';
 
 @Injectable()
 export class CurrenciesRepository extends Repository<Currencies> {
@@ -25,20 +26,14 @@ export class CurrenciesRepository extends Repository<Currencies> {
 	async createCurrency({
 		currency,
 		value,
-	}: {
-		currency: string;
-		value: number;
-	}): Promise<Currencies> {
+	}: CurrenciesInputType): Promise<Currencies> {
 		return new Currencies();
 	}
 
 	async updateCurrency({
 		currency,
 		value,
-	}: {
-		currency: string;
-		value: number;
-	}): Promise<Currencies> {
+	}: CurrenciesInputType): Promise<Currencies> {
 		return new Currencies();
 	}
 
