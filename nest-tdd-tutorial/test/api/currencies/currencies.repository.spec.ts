@@ -1,7 +1,10 @@
 import { Currencies } from '@/api/currencies/currencies.entity';
 import { CurrenciesModule } from '@/api/currencies/currencies.module';
 import { CurrenciesRepository } from '@/api/currencies/currencies.repository';
-import { InternalServerErrorException } from '@nestjs/common';
+import {
+	InternalServerErrorException,
+	NotFoundException,
+} from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -106,6 +109,18 @@ describe('CurrenciesRepository', () => {
 		// 3-3 repository save 메소드가 성공 했을때 return 데이터
 		it('should be returns created data', async () => {
 			expect(await reposiotry.createCurrency(mockData)).toEqual(mockData);
+		});
+	});
+
+	// 4. updateCurrency 메소드
+	describe('updateCurrency()', () => {
+		// 4-1. repository findOne 파라미터값 맞는지
+		it('should be called findOne with correct params', async () => {
+			currenciesRepository.findOneBy = jest.fn().mockReturnValue({});
+			await reposiotry.updateCurrency(mockData);
+			expect(currenciesRepository.findOneBy).toBeCalledWith({
+				currency: 'USD',
+			});
 		});
 	});
 });
