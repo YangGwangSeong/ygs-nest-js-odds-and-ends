@@ -83,5 +83,12 @@ describe('CurrenciesRepository', () => {
 			await reposiotry.createCurrency(mockData);
 			expect(currenciesRepository.save).toBeCalledWith(mockData);
 		});
+
+		// 3-2 repository save 함수가 에러가 났을때
+		it('should be throw when save thorw', async () => {
+			// 모킹 함수로 실패 했을때 에러를 던져줌
+			currenciesRepository.save = jest.fn().mockRejectedValue(new Error());
+			await expect(reposiotry.createCurrency(mockData)).rejects.toThrow();
+		});
 	});
 });
