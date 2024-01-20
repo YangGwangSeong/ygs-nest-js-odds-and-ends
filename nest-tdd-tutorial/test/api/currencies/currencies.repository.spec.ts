@@ -1,5 +1,4 @@
 import { Currencies } from '@/api/currencies/currencies.entity';
-import { CurrenciesModule } from '@/api/currencies/currencies.module';
 import { CurrenciesRepository } from '@/api/currencies/currencies.repository';
 import {
 	InternalServerErrorException,
@@ -155,7 +154,7 @@ describe('CurrenciesRepository', () => {
 
 		// 4-5 updateCurrency 성공시 리턴 데이터
 		it('should be returns updated data', async () => {
-			let updateMockData = { currency: 'USD', value: 2 };
+			const updateMockData = { currency: 'USD', value: 2 };
 
 			currenciesRepository.findOneBy = jest
 				.fn()
@@ -163,6 +162,18 @@ describe('CurrenciesRepository', () => {
 			currenciesRepository.save = jest.fn().mockReturnValue({}); // 저장 성공 했을때 리턴값이 없음 void라 빈 객체
 			const result = await reposiotry.updateCurrency(updateMockData);
 			expect(result).toEqual(updateMockData); // 업데이트에 성공 했을때 리턴값이 {currency: 'USD', value: 2}인지 확인
+		});
+	});
+
+	// 5. deleteCurrency 메소드
+	describe('deleteCurrency()', () => {
+		// 5-1. repository findOne 파라미터값 맞는지
+		it('should be called findOne with correct params', async () => {
+			currenciesRepository.findOneBy = jest.fn().mockReturnValue(mockData);
+			await reposiotry.deleteCurrency('USD');
+			expect(currenciesRepository.findOneBy).toBeCalledWith({
+				currency: 'USD',
+			});
 		});
 	});
 });

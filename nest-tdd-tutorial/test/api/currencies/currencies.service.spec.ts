@@ -152,7 +152,7 @@ describe('CurrenciesService', () => {
 		});
 	});
 
-	// 4번째 update
+	// 4번째 delete
 	describe('deleteCurrency()', () => {
 		// service와 repository 에러 체크
 		// repository 모킹함수 deleteCurrency 생성
