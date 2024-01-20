@@ -175,5 +175,13 @@ describe('CurrenciesRepository', () => {
 				currency: 'USD',
 			});
 		});
+
+		// 5-2 findOne 리턴값이 undefined면 에러 throw
+		it('should be throw findOne returns empty', async () => {
+			currenciesRepository.findOneBy = jest.fn().mockReturnValue(undefined);
+			await expect(reposiotry.deleteCurrency('USD')).rejects.toThrow(
+				new NotFoundException(`The currency ${mockData.currency} not found!`),
+			);
+		});
 	});
 });
