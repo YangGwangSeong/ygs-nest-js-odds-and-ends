@@ -22,6 +22,7 @@ describe('CurrenciesRepository', () => {
 		const CurrenciesRepositoryMock = {
 			findOneBy: jest.fn(),
 			save: jest.fn(),
+			delete: jest.fn(),
 		};
 
 		const module: TestingModule = await Test.createTestingModule({
@@ -182,6 +183,16 @@ describe('CurrenciesRepository', () => {
 			await expect(reposiotry.deleteCurrency('USD')).rejects.toThrow(
 				new NotFoundException(`The currency ${mockData.currency} not found!`),
 			);
+		});
+
+		// 5-3 delete 파라미터값 맞는지
+		it('should be called delete with correct params', async () => {
+			currenciesRepository.findOneBy = jest.fn().mockReturnValue(mockData);
+			currenciesRepository.delete = jest.fn().mockReturnValue({}); // 리턴값이 void라 빈객체를 mockReturnValue로 받음
+			await reposiotry.deleteCurrency('USD');
+			expect(currenciesRepository.delete).toBeCalledWith({
+				currency: 'USD',
+			});
 		});
 	});
 });
