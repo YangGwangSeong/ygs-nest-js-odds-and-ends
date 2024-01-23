@@ -194,5 +194,12 @@ describe('CurrenciesRepository', () => {
 				currency: 'USD',
 			});
 		});
+
+		// 5-4 delete 함수가 에러가 났을때
+		it('should be throw when delete thorw', async () => {
+			currenciesRepository.findOneBy = jest.fn().mockReturnValue(mockData);
+			currenciesRepository.delete = jest.fn().mockRejectedValue(new Error());
+			expect(reposiotry.deleteCurrency('USD')).rejects.toThrow();
+		});
 	});
 });
