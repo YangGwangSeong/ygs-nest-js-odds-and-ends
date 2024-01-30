@@ -1,6 +1,7 @@
 import {
 	Body,
 	Controller,
+	Delete,
 	Get,
 	Param,
 	Post,
@@ -23,5 +24,10 @@ export class CurrenciesController {
 	@UsePipes(ValidationPipe)
 	async createCurrency(@Body() dto: CreateCurrencyDto) {
 		return await this.currenciesService.createCurrency(dto);
+	}
+
+	@Delete('/:currency')
+	async deleteCurrency(@Param('currency') currency: string) {
+		return await this.currenciesService.deleteCurrency(currency);
 	}
 }
