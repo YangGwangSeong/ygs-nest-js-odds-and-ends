@@ -1,5 +1,14 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import {
+	Body,
+	Controller,
+	Get,
+	Param,
+	Post,
+	UsePipes,
+	ValidationPipe,
+} from '@nestjs/common';
 import { CurrenciesService } from './currencies.service';
+import { CreateCurrencyDto } from './dto/create-currency.dto';
 
 @Controller('currencies')
 export class CurrenciesController {
@@ -8,5 +17,11 @@ export class CurrenciesController {
 	@Get('/:currency')
 	async getCurrency(@Param('currency') currency: string) {
 		return await this.currenciesService.getCurrency(currency);
+	}
+
+	@Post()
+	@UsePipes(ValidationPipe)
+	async createCurrency(@Body() dto: CreateCurrencyDto) {
+		return await this.currenciesService.createCurrency(dto);
 	}
 }

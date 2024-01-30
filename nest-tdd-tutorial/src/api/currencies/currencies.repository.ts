@@ -6,8 +6,8 @@ import {
 	NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CurrenciesInputType } from './types/currencies-input.type';
 import { validateOrReject } from 'class-validator';
+import { CreateCurrencyDto } from './dto/create-currency.dto';
 
 @Injectable()
 export class CurrenciesRepository extends Repository<Currencies> {
@@ -29,10 +29,10 @@ export class CurrenciesRepository extends Repository<Currencies> {
 	}
 
 	async createCurrency(
-		currenciesInputType: CurrenciesInputType,
+		createCurrencyDto: CreateCurrencyDto,
 	): Promise<Currencies> {
 		const createCurrency = new Currencies();
-		Object.assign(createCurrency, currenciesInputType);
+		Object.assign(createCurrency, createCurrencyDto);
 
 		// save 되기전에 validate 체크 그 이후에 저장
 		try {
@@ -48,7 +48,7 @@ export class CurrenciesRepository extends Repository<Currencies> {
 	async updateCurrency({
 		currency,
 		value,
-	}: CurrenciesInputType): Promise<Currencies> {
+	}: CreateCurrencyDto): Promise<Currencies> {
 		const result = await this.repository.findOneBy({ currency });
 
 		if (!result) {
