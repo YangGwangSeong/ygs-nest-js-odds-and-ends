@@ -1,20 +1,24 @@
-import typia, { tags } from 'typia';
+import { tags } from 'typia';
 
 export interface ArticleDto {
   title: string & tags.MaxLength<3>;
   body: string;
 }
 
-const result = typia.assert<IMember>({
-  email: 'samchon.github@gmail.com',
-  age: 30,
-  sex: 1, // extra
-});
-
-interface IMember {
-  email: string & tags.Format<'email'>;
-  age: number &
-    tags.Type<'uint32'> &
-    tags.ExclusiveMinimum<19> &
-    tags.Maximum<100>;
+export interface IBbsArticle extends IBbsArticle.IStore {
+  id: string & tags.Format<'uuid'>;
+  created_at: string & tags.Format<'date-time'>;
 }
+export namespace IBbsArticle {
+  export interface IStore {
+    title: string & tags.MinLength<3> & tags.MaxLength<50>;
+    body: string;
+    //files: IAttachmentFile[];
+  }
+}
+
+// export interface IAttachmentFile {
+//   name: null | (string & tags.MinLength<1> & tags.MaxLength<255>);
+//   extension: null | (string & tags.MinLength<1> & tags.MaxLength<8>);
+//   url: string & tags.Format<'url'>;
+// }
