@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { ExchangeInputType } from './types/exchange-input.type';
 import { ExchangeType } from './types/exchange.type';
 import { CurrenciesService } from '../currencies/currencies.service';
+import { ExchangeInputDto } from './dto/exchange-input.dto';
 
 @Injectable()
 export class ArticlesService {
@@ -11,7 +11,7 @@ export class ArticlesService {
 		from,
 		to,
 		amount,
-	}: ExchangeInputType): Promise<ExchangeType> {
+	}: ExchangeInputDto): Promise<ExchangeType> {
 		if (!from || !to || !amount) {
 			throw new BadRequestException();
 		}

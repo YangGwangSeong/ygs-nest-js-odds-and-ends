@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ArticlesService } from '@/api/articles/articles.service';
 import { BadRequestException } from '@nestjs/common';
-import { ExchangeInputType } from '@/api/articles/types/exchange-input.type';
 import { CurrenciesService } from '@/api/currencies/currencies.service';
+import { ExchangeInputDto } from '@/api/articles/dto/exchange-input.dto';
 
 describe('ArticlesService', () => {
 	let service: ArticlesService;
 	let currenciesService: CurrenciesService;
-	let mockData: ExchangeInputType;
+	let mockData: ExchangeInputDto;
 
 	beforeEach(async () => {
 		const currenciesServiceMock = {
@@ -29,7 +29,7 @@ describe('ArticlesService', () => {
 			from: 'USD',
 			to: 'BRL',
 			amount: 1,
-		} as ExchangeInputType;
+		} satisfies ExchangeInputDto;
 	});
 
 	it('should be defined', () => {
