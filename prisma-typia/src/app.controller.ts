@@ -1,20 +1,21 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { AppService } from './app.service';
 import { IBbsArticle } from './article.dto';
-import { TypedBody, TypedRoute } from '@nestia/core';
+import core from '@nestia/core';
+import { tags } from 'typia';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @core.TypedRoute.Get(':id')
+  getHello(@core.TypedParam('id') id: string & tags.Format<'uuid'>): string {
+    return this.appService.getHello(id);
   }
 
-  @TypedRoute.Post()
+  @core.TypedRoute.Post()
   async postPosts(
-    @TypedBody() input: IBbsArticle.IStore,
+    @core.TypedBody() input: IBbsArticle.IStore,
   ): Promise<IBbsArticle> {
     return {
       ...input,
