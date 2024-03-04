@@ -1,9 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PaymentsController } from './payments.controller';
 import { Request, Response } from 'express';
+import { PaymentsService } from 'src/payments/services/payments/payments.service';
 
 describe('PaymentsController', () => {
   let controller: PaymentsController;
+  let paymentsService: PaymentsService;
 
   const requestMock = {
     query: {},
@@ -21,13 +23,26 @@ describe('PaymentsController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [PaymentsController],
+      providers: [
+        {
+          provide: 'PAYMENTS_SERVICE',
+          useValue: {
+            createPayment: jest.fn((x) => x),
+          },
+        },
+      ],
     }).compile();
 
     controller = module.get<PaymentsController>(PaymentsController);
+    paymentsService = module.get<PaymentsService>('PAYMENTS_SERVICE');
   });
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
+  });
+
+  it('paymentsService should be defined', () => {
+    expect(paymentsService).toBeDefined();
   });
 
   // 1. getPaymensts
@@ -50,5 +65,10 @@ describe('PaymentsController', () => {
       controller.getPayments(requestMock, responseMock);
       expect(responseMock.send).toHaveBeenCalledWith(200);
     });
+  });
+
+  // 2. createPayment
+  describe('createPayment', () => {
+    // 2-1 should return a successful response
   });
 });
