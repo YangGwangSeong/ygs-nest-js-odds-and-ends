@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PaymentsController } from './payments.controller';
 import { Request, Response } from 'express';
 import { PaymentsService } from 'src/payments/services/payments/payments.service';
+import { BadRequestException } from '@nestjs/common';
 
 describe('PaymentsController', () => {
   let controller: PaymentsController;
@@ -69,6 +70,23 @@ describe('PaymentsController', () => {
 
   // 2. createPayment
   describe('createPayment', () => {
-    // 2-1 should return a successful response
+    // 2-1 should throw an error
+    it('should throw an error', async () => {
+      // error 확인 할때 spyOn으로 실제 에러 던지는지 확인
+      jest
+        .spyOn(paymentsService, 'createPayment')
+        .mockImplementationOnce(() => {
+          throw new BadRequestException();
+        });
+
+      try {
+        await controller.createPayment({
+          email: 'anson@gmail.com',
+          price: 100,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    });
   });
 });
