@@ -40,5 +40,15 @@ describe('PaymentsController', () => {
         msg: 'Missing count or page query parameter',
       });
     });
+
+    // 1-2 should return a status of 200 when query params are presend
+    it('should return a status of 200 when query params are presend', () => {
+      requestMock.query = {
+        count: '10',
+        page: '1',
+      };
+      controller.getPayments(requestMock, responseMock);
+      expect(responseMock.send).toHaveBeenCalledWith(200);
+    });
   });
 });
