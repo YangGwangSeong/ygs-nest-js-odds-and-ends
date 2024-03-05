@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { User } from '../types/User';
 
 @Injectable()
-export class ServicesService {
+export class UsersService {
   private users: User[] = [
     {
       username: 'anson',
@@ -20,5 +20,9 @@ export class ServicesService {
 
   getUsers() {
     return this.users;
+  }
+
+  getUserByUsername(username: string) {
+    return this.users.find((item) => item.username === username);
   }
 }
