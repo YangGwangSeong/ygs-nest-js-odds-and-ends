@@ -7,5 +7,9 @@ export class AuthService {
     @Inject('USER_SERVICE')
     private readonly usersService: UsersService,
   ) {}
-  validateUser(username: string, password: string) {}
+  async validateUser(username: string, password: string) {
+    const userDB = await this.usersService.findUserByUsername(username);
+    if (userDB) {
+    }
+  }
 }
