@@ -3,6 +3,7 @@ import { CustomersModule } from './customers/customers.module';
 import { PaymentsModule } from './payments/payments.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './typeorm';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       username: 'testuser',
       password: 'testuser123',
       database: 'e2etutorial',
-      entities: [],
+      entities: [User],
       synchronize: true,
     }),
   ],
