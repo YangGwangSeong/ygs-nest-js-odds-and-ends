@@ -12,7 +12,7 @@ export class AuthService {
     const userDB = await this.usersService.findUserByUsername(username);
 
     if (userDB) {
-      const matched = await comparePasswords(password, userDB.password);
+      const matched = comparePasswords(password, userDB.password);
       if (matched) {
         return userDB;
       }

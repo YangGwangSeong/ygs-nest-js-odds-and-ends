@@ -43,8 +43,8 @@ export class UsersService {
     return this.users.find((item) => item.id === id);
   }
 
-  async createUser(createUserDto: CreateUserDto) {
-    const hashPassword = await encodePassword(createUserDto.password);
+  createUser(createUserDto: CreateUserDto) {
+    const hashPassword = encodePassword(createUserDto.password);
 
     const newUser = this.usersRepository.create({
       ...createUserDto,
