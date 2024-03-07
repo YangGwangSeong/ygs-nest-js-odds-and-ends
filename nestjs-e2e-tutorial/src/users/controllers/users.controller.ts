@@ -10,6 +10,7 @@ import {
   ParseIntPipe,
   Post,
   UseFilters,
+  UseGuards,
   UseInterceptors,
   UsePipes,
   ValidationPipe,
@@ -19,6 +20,7 @@ import { SerializedUser } from '../types/User';
 import { UserNotFoundException } from '../exceptions/user-not-found.exception';
 import { HttpExceptionFilter } from '../filters/http-exception.filter';
 import { CreateUserDto } from '../dto/create-user.dto';
+import { AuthenticatedGuard } from 'src/auth/utils/LocalGuard';
 
 @Controller('users')
 export class UsersController {
@@ -27,6 +29,7 @@ export class UsersController {
     private readonly usersService: UsersService,
   ) {}
 
+  @UseGuards(AuthenticatedGuard)
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
   getUsers() {

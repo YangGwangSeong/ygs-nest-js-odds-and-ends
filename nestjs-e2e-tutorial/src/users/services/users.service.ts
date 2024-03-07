@@ -60,4 +60,12 @@ export class UsersService {
       },
     });
   }
+
+  fundUserById(id: number) {
+    return this.usersRepository.findOne({
+      where: {
+        id,
+      },
+    });
+  }
 }
