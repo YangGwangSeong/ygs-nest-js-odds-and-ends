@@ -69,5 +69,28 @@ describe('UsersService', () => {
         password: 'hashed123',
       });
     });
+
+    // userService Unit test - 3. should call userRepository.save with correct params
+    it('should call userRepository.save with correct params', async () => {
+      jest.spyOn(userRepository, 'create').mockReturnValueOnce({
+        id: 1,
+        username: 'anson',
+        email: 'anson@gmail.com',
+        password: 'hashed123',
+      });
+
+      await service.createUser({
+        username: 'anson',
+        email: 'anson@gmail.com',
+        password: '123',
+      });
+
+      expect(userRepository.save).toHaveBeenCalledWith({
+        id: 1,
+        username: 'anson',
+        email: 'anson@gmail.com',
+        password: 'hashed123',
+      });
+    });
   });
 });

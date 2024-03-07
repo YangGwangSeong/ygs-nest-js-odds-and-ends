@@ -20,7 +20,7 @@ export class User {
     nullable: true,
     ...columnDefaultOptions,
   })
-  emailAddress: string;
+  email: string;
 
   @Column({
     ...columnDefaultOptions,
