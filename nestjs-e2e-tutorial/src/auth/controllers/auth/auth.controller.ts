@@ -1,12 +1,19 @@
-import { Controller, Get, Post, Req, Session, UseGuards } from '@nestjs/common';
-import { Request } from 'express';
+import {
+  Controller,
+  Get,
+  Post,
+  Req,
+  Request,
+  Session,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthenticatedGuard, LocalAuthGuard } from '../../utils/LocalGuard';
 
 @Controller('auth')
 export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login() {}
+  async login(@Request() req) {}
 
   @Get()
   async getAuthSesstion(@Session() session: Record<string, any>) {
@@ -16,7 +23,5 @@ export class AuthController {
 
   @UseGuards(AuthenticatedGuard)
   @Get('status')
-  async getAuthStatus(@Req() req: Request) {
-    return req.user;
-  }
+  async getAuthStatus() {}
 }

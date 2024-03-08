@@ -23,48 +23,48 @@ describe('UsersController E2E Test', () => {
     it('should create a new user', () => {
       return request(app.getHttpServer())
         .post(CREATE_USER_URL)
-        .expect(201)
         .send({
           username: 'anson',
           password: 'ansonanson',
           email: 'anson@gmail.com',
-        });
+        })
+        .expect(201);
     });
 
     // 1-2 should return a 400 when invalid username
     it('should return a 400 when invalid username is provided', () => {
       return request(app.getHttpServer())
         .post(CREATE_USER_URL)
-        .expect(400)
         .send({
           username: 'an',
           password: 'ansonanson',
           email: 'anson@gmail.com',
-        });
+        })
+        .expect(400);
     });
 
     // 1-3 should return a 400 when invalid password is provided
     it('should return a 400 when invalid password is provided', () => {
       return request(app.getHttpServer())
         .post(CREATE_USER_URL)
-        .expect(400)
         .send({
           username: 'anson_nestjs',
           password: 'sada',
           email: 'anson@gmail.com',
-        });
+        })
+        .expect(400);
     });
 
     // 1-4 should return a 400 when invalid email is provided
     it('should return a 400 when invalid email is provided', () => {
       return request(app.getHttpServer())
         .post(CREATE_USER_URL)
-        .expect(400)
         .send({
           username: 'anson_nestjs',
           password: 'ansonanson',
           email: 'anson',
-        });
+        })
+        .expect(400);
     });
   });
 });
