@@ -17,5 +17,17 @@ describe('UsersController E2E Test', () => {
   });
 
   // 1. Creating New Users POST /api/users/create
-  describe('Creating New Users POST /api/users/create', () => {});
+  describe('Creating New Users POST /api/users/create', () => {
+    // 1-1 should create a new user
+    it('should create a new user', () => {
+      return request(app.getHttpServer())
+        .post('/users/create')
+        .expect(201)
+        .send({
+          username: 'anson',
+          password: 'ansonanson',
+          email: 'anson@gmail.com',
+        });
+    });
+  });
 });
