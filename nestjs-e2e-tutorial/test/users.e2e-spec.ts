@@ -15,4 +15,7 @@ describe('UsersController E2E Test', () => {
     app = moduleFixture.createNestApplication();
     await app.init();
   });
+
+  // 1. Creating New Users POST /api/users/create
+  describe('Creating New Users POST /api/users/create', () => {});
 });
