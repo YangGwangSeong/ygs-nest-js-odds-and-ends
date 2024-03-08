@@ -39,14 +39,28 @@ describe('UsersController E2E Test', () => {
   describe('Authentication', () => {
     // 2-1 should login
     const URL = '/auth/login';
-    it('should login', () => {
+    let cookie = '';
+    it('should login', (done) => {
       return request(app.getHttpServer())
         .post(URL)
         .send({
           email: 'anson@gmail.com',
           password: 'ansonanson',
         })
-        .expect(201);
+        .expect(201)
+        .end((err, res) => {
+          console.log(res.headers);
+          cookie = res.headers['set-cookie'];
+          done();
+        });
+    });
+
+    // 2-2 should visit /api/users and return 200
+    it('should visit /api/users and return 200', async () => {
+      return request(app.getHttpServer())
+        .get('/api/users')
+        .set('Cookie', cookie)
+        .expect(200);
     });
   });
 });
