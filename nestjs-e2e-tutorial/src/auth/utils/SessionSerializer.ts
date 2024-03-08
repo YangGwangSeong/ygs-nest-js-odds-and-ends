@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PassportSerializer } from '@nestjs/passport';
-import { User } from 'src/typeorm';
-import { UsersService } from 'src/users/services/users.service';
+import { User } from '../../typeorm';
+import { UsersService } from '../../users/services/users.service';
 
 @Injectable()
 export class SessionSerializer extends PassportSerializer {
