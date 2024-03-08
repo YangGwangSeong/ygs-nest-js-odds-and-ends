@@ -32,13 +32,25 @@ describe('UsersController E2E Test', () => {
     });
 
     // 1-2 should return a 400 when invalid username
-    it('should return a 400 when invalid username', () => {
+    it('should return a 400 when invalid username is provided', () => {
       return request(app.getHttpServer())
         .post(CREATE_USER_URL)
         .expect(400)
         .send({
           username: 'an',
           password: 'ansonanson',
+          email: 'anson@gmail.com',
+        });
+    });
+
+    // 1-3 should return a 400 when invalid password is provided
+    it('should return a 400 when invalid password is provided', () => {
+      return request(app.getHttpServer())
+        .post(CREATE_USER_URL)
+        .expect(400)
+        .send({
+          username: 'anson_nestjs',
+          password: 'sada',
           email: 'anson@gmail.com',
         });
     });
