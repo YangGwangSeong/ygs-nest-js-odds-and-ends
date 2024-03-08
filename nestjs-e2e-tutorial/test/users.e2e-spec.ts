@@ -54,5 +54,17 @@ describe('UsersController E2E Test', () => {
           email: 'anson@gmail.com',
         });
     });
+
+    // 1-4 should return a 400 when invalid email is provided
+    it('should return a 400 when invalid email is provided', () => {
+      return request(app.getHttpServer())
+        .post(CREATE_USER_URL)
+        .expect(400)
+        .send({
+          username: 'anson_nestjs',
+          password: 'ansonanson',
+          email: 'anson',
+        });
+    });
   });
 });
