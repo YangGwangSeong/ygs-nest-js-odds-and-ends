@@ -18,13 +18,26 @@ describe('UsersController E2E Test', () => {
 
   // 1. Creating New Users POST /api/users/create
   describe('Creating New Users POST /api/users/create', () => {
+    const CREATE_USER_URL = '/users/create';
     // 1-1 should create a new user
     it('should create a new user', () => {
       return request(app.getHttpServer())
-        .post('/users/create')
+        .post(CREATE_USER_URL)
         .expect(201)
         .send({
           username: 'anson',
+          password: 'ansonanson',
+          email: 'anson@gmail.com',
+        });
+    });
+
+    // 1-2 should return a 400 when invalid username
+    it('should return a 400 when invalid username', () => {
+      return request(app.getHttpServer())
+        .post(CREATE_USER_URL)
+        .expect(400)
+        .send({
+          username: 'an',
           password: 'ansonanson',
           email: 'anson@gmail.com',
         });
