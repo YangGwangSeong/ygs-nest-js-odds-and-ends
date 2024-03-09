@@ -26,10 +26,29 @@ describe('PostsController', () => {
     });
 
     // 1-2 getPost 메소드의 리턴값이 맞는지 체크
-    it('should return a post', () => {
+    it('should return a posts', () => {
       const result = controller.getPost();
 
       expect(result).toEqual(postItems);
+    });
+  });
+
+  // 2 getPostById 메소드
+  describe('getPostbyId()', () => {
+    // 1-1 getPostbyId 메소드가 정의 되었는지
+    it('should be defined getPostbyId', () => {
+      expect(controller.getPostbyId).toBeDefined();
+    });
+
+    // 1-2 getPostbyId 리턴값이 맞는지 체크
+    it('should be a post', () => {
+      const mockParamPsotId = 3;
+      const mockPostValue = postItems.find(
+        (item) => item.id === mockParamPsotId,
+      );
+      const result = controller.getPostbyId(mockParamPsotId);
+
+      expect(result).toEqual(mockPostValue);
     });
   });
 });
