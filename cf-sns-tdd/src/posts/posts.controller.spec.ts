@@ -126,4 +126,19 @@ describe('PostsController', () => {
       );
     });
   });
+
+  // 5 deletePost 메서드
+  describe('deletePost', () => {
+    // 5-1 deletePost 메서드 정의 되었는지
+    it('should be defined deletePost', () => {
+      expect(controller.deletePost).toBeDefined();
+    });
+
+    // 5-2 postId가 없으면 에러 체크
+    it('should be an error when the postId by Params', () => {
+      expect(() => controller.deletePost(null)).toThrow(
+        new NotFoundException(),
+      );
+    });
+  });
 });

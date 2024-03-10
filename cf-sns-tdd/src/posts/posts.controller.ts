@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   NotFoundException,
   Param,
@@ -98,7 +99,7 @@ export class PostsController {
     return newPost;
   }
 
-  @Patch()
+  @Patch(':postId')
   patchPost(@Param('postId') postId: string, @Body() dto: Partial<IPost>) {
     if (!postId) throw new NotFoundException();
 
@@ -116,5 +117,12 @@ export class PostsController {
     }
 
     return post;
+  }
+
+  @Delete(':postId')
+  deletePost(@Param('postId') postId: string) {
+    if (!postId) throw new NotFoundException();
+
+    postItems.filter((item) => item.id !== +postId);
   }
 }
