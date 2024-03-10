@@ -1,4 +1,10 @@
-import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+} from '@nestjs/common';
 import { PostsService } from './posts.service';
 
 export interface IPost {
@@ -69,4 +75,7 @@ export class PostsController {
 
     return post;
   }
+
+  @Post()
+  postPosts() {}
 }

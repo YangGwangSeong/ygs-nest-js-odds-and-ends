@@ -34,12 +34,12 @@ describe('PostsController', () => {
 
   // 2 getPostById 메소드
   describe('getPostbyId()', () => {
-    // 1-1 getPostbyId 메소드가 정의 되었는지
+    // 2-1 getPostbyId 메소드가 정의 되었는지
     it('should be defined getPostbyId', () => {
       expect(controller.getPostbyId).toBeDefined();
     });
 
-    // 1-2 getPostbyId 리턴값이 맞는지 체크
+    // 2-2 getPostbyId 리턴값이 맞는지 체크
     it('should be a post', () => {
       const mockParamPsotId = 3;
       const mockPostValue = postItems.find(
@@ -49,7 +49,7 @@ describe('PostsController', () => {
       expect(controller.getPostbyId(mockParamPsotId)).toEqual(mockPostValue);
     });
 
-    // 1-3 존재 하지 않는 post일때 에러 체크
+    // 2-3 존재 하지 않는 post일때 에러 체크
     it('should be an error when the post does not exist', () => {
       const mockParamPsotId = 7;
 
@@ -60,6 +60,14 @@ describe('PostsController', () => {
       expect(() => controller.getPostbyId(mockParamPsotId)).toThrow(
         new NotFoundException(),
       );
+    });
+  });
+
+  // 3 postPosts 메소드
+  describe('postPosts', () => {
+    // 3-1 postPosts 메소드가 정의 되었는지
+    it('should be defined postPosts', () => {
+      expect(controller.postPosts).toBeDefined();
     });
   });
 });
