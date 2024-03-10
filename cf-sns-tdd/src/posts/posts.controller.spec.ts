@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PostsController, postItems } from './posts.controller';
+import { IPost, PostsController, postItems } from './posts.controller';
 import { PostsService } from './posts.service';
 import { NotFoundException } from '@nestjs/common';
 
@@ -68,6 +68,33 @@ describe('PostsController', () => {
     // 3-1 postPosts 메소드가 정의 되었는지
     it('should be defined postPosts', () => {
       expect(controller.postPosts).toBeDefined();
+    });
+
+    //3-2 postPosts 리턴값이 맞는지 체크
+    it('should be correct create post', () => {
+      const mockNewPost: Omit<IPost, 'likeCount' | 'commentCount'> = {
+        id: postItems[postItems.length - 1].id + 1,
+        author: 'newjeans_official',
+        title: '뉴진스 혜인',
+        content: '장난 치고 있는 혜인',
+      };
+
+      const returnNewPost: IPost = {
+        id: 6,
+        author: 'newjeans_official',
+        title: '뉴진스 혜인',
+        content: '장난 치고 있는 혜인',
+        likeCount: 0,
+        commentCount: 0,
+      };
+
+      expect(
+        controller.postPosts(
+          mockNewPost.author,
+          mockNewPost.title,
+          mockNewPost.content,
+        ),
+      ).toEqual(returnNewPost);
     });
   });
 });

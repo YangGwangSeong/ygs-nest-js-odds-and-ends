@@ -77,5 +77,22 @@ export class PostsController {
   }
 
   @Post()
-  postPosts() {}
+  postPosts(
+    @Param('author') author: string,
+    @Param('title') title: string,
+    @Param('content') content: string,
+  ) {
+    const newPost: IPost = {
+      id: postItems[postItems.length - 1].id + 1,
+      author,
+      title,
+      content,
+      likeCount: 0,
+      commentCount: 0,
+    };
+
+    postItems.push(newPost);
+
+    return newPost;
+  }
 }
