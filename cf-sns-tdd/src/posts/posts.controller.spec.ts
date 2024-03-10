@@ -97,4 +97,33 @@ describe('PostsController', () => {
       ).toEqual(returnNewPost);
     });
   });
+
+  // 4 patchPost 메소드
+  describe('patchPost', () => {
+    // 4-1 pathPost 메소드가 정의 되었는지
+    it('should be defined patchPost', () => {
+      expect(controller.patchPost).toBeDefined();
+    });
+
+    // 4-2 param postId가 없으면 에러
+    it('should be an error when the post does not exist', () => {
+      expect(() => controller.patchPost(null, {})).toThrow(
+        new NotFoundException(),
+      );
+    });
+
+    // 4-3 리턴값이 맞는지 체크
+    it('should be correct return value', () => {
+      const mockPostId = 2;
+      const mockUpdatePost = {
+        title: '헬로우월드',
+      };
+      const updatePost = postItems.find((item) => item.id === mockPostId);
+      updatePost.title = mockUpdatePost.title;
+
+      expect(controller.patchPost(String(mockPostId), mockUpdatePost)).toEqual(
+        updatePost,
+      );
+    });
+  });
 });

@@ -1,8 +1,10 @@
 import {
+  Body,
   Controller,
   Get,
   NotFoundException,
   Param,
+  Patch,
   Post,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
@@ -94,5 +96,25 @@ export class PostsController {
     postItems.push(newPost);
 
     return newPost;
+  }
+
+  @Patch()
+  patchPost(@Param('postId') postId: string, @Body() dto: Partial<IPost>) {
+    if (!postId) throw new NotFoundException();
+
+    const post = postItems.find((item) => item.id === +postId);
+    if (dto.title) {
+      post.title = dto.title;
+    }
+
+    if (dto.content) {
+      post.content = dto.content;
+    }
+
+    if (dto.author) {
+      post.author = dto.author;
+    }
+
+    return post;
   }
 }
