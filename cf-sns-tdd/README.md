@@ -10,4 +10,4 @@ $ npm i @nestjs/jwt
 $ npm i @nestjs/typeorm typeorm pg
 ```
 
-# https://github.com/dltkdgns00/Nest.js_Study/commit/f2fb3246942d81879da1c963bce9b491be2a0885
+# https://github.com/dltkdgns00/Nest.js_Study/commit/5a9db554d963a1e19f1a6b4e8c9e06e29280f579
