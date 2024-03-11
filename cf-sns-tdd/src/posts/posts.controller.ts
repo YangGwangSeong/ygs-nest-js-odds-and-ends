@@ -1,14 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  NotFoundException,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
-import { PostsService } from './posts.service';
+import { Controller, Get } from '@nestjs/common';
 
 export interface IPost {
   id: number;
@@ -64,65 +54,10 @@ export const postItems: IPost[] = [
 
 @Controller('posts')
 export class PostsController {
-  constructor(private readonly postsService: PostsService) {}
+  constructor() {}
 
   @Get()
-  getPost() {
-    return postItems;
-  }
-
-  @Get(':id')
-  getPostbyId(@Param('id') id: number) {
-    const post = postItems.find((item) => item.id === id);
-    if (!post) throw new NotFoundException();
-
-    return post;
-  }
-
-  @Post()
-  postPosts(
-    @Param('author') author: string,
-    @Param('title') title: string,
-    @Param('content') content: string,
-  ) {
-    const newPost: IPost = {
-      id: postItems[postItems.length - 1].id + 1,
-      author,
-      title,
-      content,
-      likeCount: 0,
-      commentCount: 0,
-    };
-
-    postItems.push(newPost);
-
-    return newPost;
-  }
-
-  @Patch(':postId')
-  patchPost(@Param('postId') postId: string, @Body() dto: Partial<IPost>) {
-    if (!postId) throw new NotFoundException();
-
-    const post = postItems.find((item) => item.id === +postId);
-    if (dto.title) {
-      post.title = dto.title;
-    }
-
-    if (dto.content) {
-      post.content = dto.content;
-    }
-
-    if (dto.author) {
-      post.author = dto.author;
-    }
-
-    return post;
-  }
-
-  @Delete(':postId')
-  deletePost(@Param('postId') postId: string) {
-    if (!postId) throw new NotFoundException();
-
-    postItems.filter((item) => item.id !== +postId);
+  getPosts() {
+    return true;
   }
 }
