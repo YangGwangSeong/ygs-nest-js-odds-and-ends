@@ -3,6 +3,7 @@ import { IPost, postItems } from './posts.controller';
 
 @Injectable()
 export class PostsService {
+  constructor() {}
   getPosts() {
     return postItems;
   }

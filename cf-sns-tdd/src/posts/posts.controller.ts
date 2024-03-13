@@ -1,4 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
+import { PostsService } from './posts.service';
 
 export interface IPost {
   id: number;
@@ -54,10 +55,10 @@ export const postItems: IPost[] = [
 
 @Controller('posts')
 export class PostsController {
-  constructor() {}
+  constructor(private readonly postsService: PostsService) {}
 
   @Get()
   getPosts() {
-    return true;
+    return this.postsService.getPosts();
   }
 }
