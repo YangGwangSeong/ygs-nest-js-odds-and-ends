@@ -25,5 +25,25 @@ describe('PostsController E2E Test', () => {
       const res = await request(app.getHttpServer()).get('/posts').expect(200);
       expect(res.body.length).toBe(5);
     });
+
+    // e2e 1-2 (POST) Create Post /posts
+    it('(POST) Create Post /posts', async () => {
+      const newPost: IPost = {
+        id: postItems[postItems.length - 1].id + 1,
+        author: 'newjeans_official',
+        title: '뉴진스 혜인',
+        content: '장난 치고 있는 혜인',
+        likeCount: 0,
+        commentCount: 0,
+      };
+
+      const res = await request(app.getHttpServer())
+        .post('/posts')
+        .send(newPost)
+        .expect(201);
+
+      expect(res.body.id).toEqual(newPost.id);
+      expect(res.body.title).toEqual(newPost.title);
+    });
   });
 });

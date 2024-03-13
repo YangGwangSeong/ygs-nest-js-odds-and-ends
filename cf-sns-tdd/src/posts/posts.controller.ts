@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { PostsService } from './posts.service';
 
 export interface IPost {
@@ -60,5 +60,10 @@ export class PostsController {
   @Get()
   getPosts() {
     return this.postsService.getPosts();
+  }
+
+  @Post()
+  postPosts(@Body() dto: any) {
+    return this.postsService.createPost(dto.author, dto.title, dto.content);
   }
 }
