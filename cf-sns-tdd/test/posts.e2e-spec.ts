@@ -3,9 +3,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 import { PostsModule } from '../src/posts/posts.module';
 import { IPost, postItems } from '../src/posts/posts.controller';
+import { PostsService } from '../src/posts/posts.service';
 
 describe('PostsController E2E Test', () => {
   let app: INestApplication;
+  let postsService: PostsService;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -13,12 +15,17 @@ describe('PostsController E2E Test', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-
     await app.init();
+
+    postsService = moduleFixture.get<PostsService>(PostsService);
   });
 
   afterAll(async () => {
     await app.close();
+  });
+
+  it('should be defined postsService', () => {
+    expect(postsService).toBeDefined();
   });
 
   // e2e 1. Get All Posts Get /posts
@@ -34,12 +41,24 @@ describe('PostsController E2E Test', () => {
 
   // e2e 2 (GET) get Post /posts/:postId
   describe('(GET) /posts/:postId', () => {
-    // e2e 2-1 (GET) get Post
+    // e2e 2-1 check correct parameter
+    it('(GET) check correct parameter', async () => {
+      const postId = '1';
+      const postServSpy = jest.spyOn(postsService, 'getPostById');
+      await request(app.getHttpServer())
+        .get(`/posts/${postId}`)
+        .expect(HttpStatus.OK);
+
+      expect(postServSpy).toHaveBeenCalledWith(Number(postId));
+    });
+
+    // e2e 2-2 (GET) get Post
     it('(GET) get Post', async () => {
       const postId = '1';
       const expectedPost = postItems.find(
         (post) => post.id === parseInt(postId),
       );
+
       const res = await request(app.getHttpServer())
         .get(`/posts/${postId}`)
         .expect(HttpStatus.OK);
@@ -47,7 +66,7 @@ describe('PostsController E2E Test', () => {
       expect(res.body).toEqual(expectedPost);
     });
 
-    // e2e 2-2 (GET) get Post Not Found exception 404
+    // e2e 2-3 (GET) get Post Not Found exception 404
     it('(GET) get Post Not Found exception 404', async () => {
       const postId = '999';
       const res = await request(app.getHttpServer())
@@ -88,7 +107,30 @@ describe('PostsController E2E Test', () => {
 
   // e2e 4. Update Post POST /posts
   describe('(PATCH) Update Post /posts/:postId', () => {
-    // 4-1 (PATCH) Update Post /posts/:postId
+    // 4-1 (PATCH) check correct parameter
+    it('(PATCH) check correct parameter', async () => {
+      const mockPostId = '2';
+      const mockUpdatePost = {
+        title: '헬로우월드',
+        content: 'hello',
+        author: 'me',
+      };
+      const updatePost = postItems.find(
+        (item) => item.id === Number(mockPostId),
+      );
+      updatePost.title = mockUpdatePost.title;
+
+      const postServSpy = jest.spyOn(postsService, 'updatePost');
+
+      await request(app.getHttpServer())
+        .patch(`/posts/${mockPostId}`)
+        .send(updatePost)
+        .expect(HttpStatus.OK);
+
+      expect(postServSpy).toHaveBeenCalledWith(Number(mockPostId), updatePost);
+    });
+
+    // 4-2 (PATCH) Update Post /posts/:postId
     it('(PATCH) Update Post /posts/:postId', async () => {
       const mockPostId = '2';
       const mockUpdatePost = {
@@ -109,7 +151,7 @@ describe('PostsController E2E Test', () => {
       expect(res.body.title).toEqual(mockUpdatePost.title);
     });
 
-    // 4-2 (PATCH) Post Not Found exception 404 /posts/:postId
+    // 4-3 (PATCH) Post Not Found exception 404 /posts/:postId
     it('(PATCH) Post Not Found exception 404', async () => {
       const postId = '999';
       const res = await request(app.getHttpServer())
