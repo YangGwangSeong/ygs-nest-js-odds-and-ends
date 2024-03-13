@@ -57,7 +57,7 @@ describe('PostsService', () => {
       // expect(controller.getPostbyId(mockParamPsotId)) - 함수를 호출하여 반환된 값을 테스트합니다.
       // expect(() => controller.getPostbyId(mockParamPsotId)) - 함수 호출을 콜백 함수로 감싸고 있습니다. 따라서 테스트는 함수를 호출하고 예외가 발생하는지를 확인
       expect(() => service.getPostById(mockParamPsotId)).toThrow(
-        new NotFoundException(),
+        new NotFoundException('post를 찾을 수 없습니다'),
       );
     });
   });
@@ -108,7 +108,7 @@ describe('PostsService', () => {
     it('should be an error when the post does not exist', () => {
       const mockParamPsotId = 7;
       expect(() => service.updatePost(mockParamPsotId, {})).toThrow(
-        new NotFoundException(),
+        new NotFoundException('post를 찾을 수 없습니다'),
       );
     });
 
@@ -117,6 +117,8 @@ describe('PostsService', () => {
       const mockPostId = 2;
       const mockUpdatePost = {
         title: '헬로우월드',
+        content: 'hello',
+        author: 'me',
       };
       const updatePost = postItems.find((item) => item.id === mockPostId);
       updatePost.title = mockUpdatePost.title;
@@ -138,7 +140,7 @@ describe('PostsService', () => {
     it('should be an error when the postId by Params', () => {
       const mockParamPsotId = 7;
       expect(() => service.deletePost(mockParamPsotId)).toThrow(
-        new NotFoundException(),
+        new NotFoundException('post를 찾을 수 없습니다'),
       );
     });
   });

@@ -11,7 +11,7 @@ export class PostsService {
   getPostById(postId: number) {
     const post = postItems.find((item) => item.id === postId);
 
-    if (!post) throw new NotFoundException();
+    if (!post) throw new NotFoundException('post를 찾을 수 없습니다');
 
     return post;
   }
@@ -41,7 +41,7 @@ export class PostsService {
   ) {
     const post = postItems.find((item) => item.id === postId);
 
-    if (!post) throw new NotFoundException();
+    if (!post) throw new NotFoundException('post를 찾을 수 없습니다');
 
     if (title) {
       post.title = title;
@@ -61,6 +61,6 @@ export class PostsService {
   deletePost(postId: number) {
     const post = postItems.find((item) => item.id === postId);
 
-    if (!post) throw new NotFoundException();
+    if (!post) throw new NotFoundException('post를 찾을 수 없습니다');
   }
 }

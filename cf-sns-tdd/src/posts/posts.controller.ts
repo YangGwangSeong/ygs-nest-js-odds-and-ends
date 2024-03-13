@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { PostsService } from './posts.service';
+import { CreatePostDto } from './dto/create-post.dto';
 
 export interface IPost {
   id: number;
@@ -57,13 +58,26 @@ export const postItems: IPost[] = [
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
+  @Get('/:postId')
+  getPost(@Param('postId') postId: string) {
+    return this.postsService.getPostById(+postId);
+  }
+
   @Get()
   getPosts() {
     return this.postsService.getPosts();
   }
 
   @Post()
-  postPosts(@Body() dto: any) {
+  postPosts(@Body() dto: CreatePostDto) {
     return this.postsService.createPost(dto.author, dto.title, dto.content);
+  }
+
+  @Patch('/:postId')
+  patchPost(
+    @Param('postId') postId: string,
+    @Body() dto: Partial<CreatePostDto>,
+  ) {
+    return this.postsService.updatePost(+postId, dto);
   }
 }
