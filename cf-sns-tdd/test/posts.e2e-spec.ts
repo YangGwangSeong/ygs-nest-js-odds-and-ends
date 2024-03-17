@@ -105,7 +105,7 @@ describe('PostsController E2E Test', () => {
     });
   });
 
-  // e2e 4. Update Post POST /posts
+  // e2e 4. Update Post PATCH /posts/:postId
   describe('(PATCH) Update Post /posts/:postId', () => {
     // 4-1 (PATCH) check correct parameter
     it('(PATCH) check correct parameter', async () => {
@@ -156,6 +156,46 @@ describe('PostsController E2E Test', () => {
       const postId = '999';
       const res = await request(app.getHttpServer())
         .patch(`/posts/${postId}`)
+        .expect(HttpStatus.NOT_FOUND);
+
+      const result = {
+        error: 'Not Found',
+        message: 'post를 찾을 수 없습니다',
+        statusCode: 404,
+      };
+      expect(res.body).toEqual(result);
+    });
+  });
+
+  // e2e 5. DELETE Post DELETE /posts/:postId
+  describe('(DELETE) Update Post /posts/:postId', () => {
+    // 5-1 (DELETE) check correct parameter
+    it('(DELETE) check correct parameter', async () => {
+      const mockPostId = '2';
+
+      const postServSpy = jest.spyOn(postsService, 'deletePost');
+
+      await request(app.getHttpServer())
+        .delete(`/posts/${mockPostId}`)
+        .expect(HttpStatus.OK);
+
+      expect(postServSpy).toHaveBeenCalledWith(Number(mockPostId));
+    });
+
+    // 5-2 (DELETE) delete Post
+    it('(DELETE) delete Post', async () => {
+      const mockPostId = '2';
+
+      await request(app.getHttpServer())
+        .delete(`/posts/${mockPostId}`)
+        .expect(HttpStatus.OK);
+    });
+
+    // 5-3 (DELETE) Post Not Found exception 404 /posts/:postId
+    it('(DELETE) Post Not Found exception 404', async () => {
+      const postId = '999';
+      const res = await request(app.getHttpServer())
+        .delete(`/posts/${postId}`)
         .expect(HttpStatus.NOT_FOUND);
 
       const result = {
