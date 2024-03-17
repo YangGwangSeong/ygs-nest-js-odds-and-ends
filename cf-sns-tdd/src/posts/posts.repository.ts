@@ -11,4 +11,8 @@ export class PostsRepository extends Repository<PostsModel> {
   ) {
     super(repository.target, repository.manager, repository.queryRunner);
   }
+
+  async getPostsRepository() {
+    return await this.repository.find();
+  }
 }

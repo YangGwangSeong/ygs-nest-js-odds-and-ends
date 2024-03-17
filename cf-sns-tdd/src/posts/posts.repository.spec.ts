@@ -9,7 +9,9 @@ describe('PostsRepository', () => {
   let postsRepository: Repository<PostsModel>;
 
   beforeEach(async () => {
-    const PostsRepositoryMock = {};
+    const PostsRepositoryMock = {
+      find: jest.fn(),
+    };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -33,5 +35,19 @@ describe('PostsRepository', () => {
 
   it('should be defined postsRepository', () => {
     expect(postsRepository).toBeDefined();
+  });
+
+  // 1. getPostsRepsotiry()
+  describe('getPostsRepsotiry()', () => {
+    // 1-1 should be defined getPostsRepository method
+    it('should be defined getPostsRepository method', () => {
+      expect(repository.getPostsRepository).toBeDefined();
+    });
+
+    // 1-2 should be returns when find returns
+    it('should be returns when find returns', async () => {
+      (postsRepository.find as jest.Mock).mockReturnValue([]);
+      expect(await repository.getPostsRepository()).toEqual([]);
+    });
   });
 });
