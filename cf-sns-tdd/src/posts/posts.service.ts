@@ -1,9 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { IPost, postItems } from './posts.controller';
+import { PostsRepository } from './posts.repository';
 
 @Injectable()
 export class PostsService {
-  constructor() {}
+  constructor(private readonly postsRepository: PostsRepository) {}
   getPosts() {
     return postItems;
   }

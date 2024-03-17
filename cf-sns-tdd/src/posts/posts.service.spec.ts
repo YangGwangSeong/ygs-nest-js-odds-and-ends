@@ -2,20 +2,35 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PostsService } from './posts.service';
 import { IPost, postItems } from './posts.controller';
 import { NotFoundException } from '@nestjs/common';
+import { PostsRepository } from './posts.repository';
 
 describe('PostsService', () => {
   let service: PostsService;
+  let repository: PostsRepository;
 
   beforeEach(async () => {
+    const PostsRepositoryMock = {};
+
     const module: TestingModule = await Test.createTestingModule({
-      providers: [PostsService],
+      providers: [
+        PostsService,
+        {
+          provide: PostsRepository,
+          useFactory: () => PostsRepositoryMock,
+        },
+      ],
     }).compile();
 
     service = module.get<PostsService>(PostsService);
+    repository = module.get<PostsRepository>(PostsRepository);
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  it('should be defined repository', () => {
+    expect(repository).toBeDefined();
   });
 
   // service 1 getPosts 메소드

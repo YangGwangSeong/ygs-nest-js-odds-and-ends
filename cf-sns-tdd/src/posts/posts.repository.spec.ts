@@ -9,11 +9,7 @@ describe('PostsRepository', () => {
   let postsRepository: Repository<PostsModel>;
 
   beforeEach(async () => {
-    const PostsRepositoryMock = {
-      findOneBy: jest.fn(),
-      save: jest.fn(),
-      delete: jest.fn(),
-    };
+    const PostsRepositoryMock = {};
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
