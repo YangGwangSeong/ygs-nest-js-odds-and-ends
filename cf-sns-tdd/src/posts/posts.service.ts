@@ -5,8 +5,8 @@ import { PostsRepository } from './posts.repository';
 @Injectable()
 export class PostsService {
   constructor(private readonly postsRepository: PostsRepository) {}
-  getPosts() {
-    return postItems;
+  async getPosts() {
+    return await this.postsRepository.getPostsRepository();
   }
 
   getPostById(postId: number) {

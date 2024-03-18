@@ -9,7 +9,9 @@ describe('PostsService', () => {
   let repository: PostsRepository;
 
   beforeEach(async () => {
-    const PostsRepositoryMock = {};
+    const PostsRepositoryMock = {
+      getPostsRepository: jest.fn(),
+    };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -40,9 +42,15 @@ describe('PostsService', () => {
       expect(service.getPosts).toBeDefined();
     });
 
-    // service 1-2 getPosts 메소드의 리턴값이 맞는지 체크
-    it('should return a posts', () => {
-      expect(service.getPosts()).toEqual(postItems);
+    // service 1-2 service의 getPosts메서드를 호출 했을때 repository의 리턴 에러가 안나는지 체크
+    it('should be not throw if repository returns', async () => {
+      await expect(service.getPosts()).resolves.not.toThrow();
+    });
+
+    // service 1-3 repository의 getPostsRepository 리턴이 있을때 service의 getPosts 메서드에 제대로 리턴값이 오는지 체크
+    it('should be return when repository return', async () => {
+      (repository.getPostsRepository as jest.Mock).mockReturnValue([]);
+      expect(await service.getPosts()).toEqual([]);
     });
   });
 

@@ -62,7 +62,7 @@ describe('PostsController E2E Test', () => {
       const res = await request(app.getHttpServer())
         .get('/posts')
         .expect(HttpStatus.OK);
-      expect(res.body.length).toBe(postItems.length);
+      expect(res.body.length).toBe(0);
     });
   });
 
