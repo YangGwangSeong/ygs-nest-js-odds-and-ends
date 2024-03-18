@@ -11,6 +11,7 @@ describe('PostsRepository', () => {
   beforeEach(async () => {
     const PostsRepositoryMock = {
       find: jest.fn(),
+      findOne: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -48,6 +49,27 @@ describe('PostsRepository', () => {
     it('should be returns when find returns', async () => {
       (postsRepository.find as jest.Mock).mockReturnValue([]);
       expect(await repository.getPostsRepository()).toEqual([]);
+    });
+  });
+
+  // 2. getPostByIdRepository()
+  describe('getPostByIdRepository()', () => {
+    // 2-1 should be defined getPostByIdRepository method
+    it('should be defined getPostByIdRepository method', () => {
+      expect(repository.getPostByIdRepository).toBeDefined();
+    });
+
+    // 2-2 repository findOne 메서드가 제대로 호출 되었는지
+    it('should be success called with postsRepository findOneBy ', async () => {
+      (postsRepository.findOne as jest.Mock).mockReturnValue({});
+      await repository.getPostByIdRepository(1);
+      expect(postsRepository.findOne).toHaveBeenCalled();
+    });
+
+    // 2-3 should be returns findOne find returns
+    it('should be returns findOne find returns', async () => {
+      (postsRepository.findOne as jest.Mock).mockReturnValue({});
+      expect(await repository.getPostByIdRepository).toEqual({});
     });
   });
 });

@@ -15,4 +15,8 @@ export class PostsRepository extends Repository<PostsModel> {
   async getPostsRepository() {
     return await this.repository.find();
   }
+
+  async getPostByIdRepository(postId: number) {
+    return await this.repository.findOne({ where: { id: postId } });
+  }
 }
