@@ -3,14 +3,17 @@ import { PostsService } from './posts.service';
 import { IPost, postItems } from './posts.controller';
 import { NotFoundException } from '@nestjs/common';
 import { PostsRepository } from './posts.repository';
+import { PostsModel } from './entities/posts.entity';
 
 describe('PostsService', () => {
   let service: PostsService;
   let repository: PostsRepository;
+  let mockData: PostsModel = new PostsModel(); // 나중에 createPostDto로 대체됨
 
   beforeEach(async () => {
     const PostsRepositoryMock = {
       getPostsRepository: jest.fn(),
+      getPostByIdRepository: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -25,6 +28,12 @@ describe('PostsService', () => {
 
     service = module.get<PostsService>(PostsService);
     repository = module.get<PostsRepository>(PostsRepository);
+    mockData.id = 1;
+    mockData.author = '양광성';
+    mockData.commentCount = 0;
+    mockData.content = '테스트 데이터';
+    mockData.likeCount = 0;
+    mockData.title = '제목';
   });
 
   it('should be defined', () => {
@@ -61,27 +70,31 @@ describe('PostsService', () => {
       expect(service.getPostById).toBeDefined();
     });
 
-    // 2-2 getPostbyId 리턴값이 맞는지 체크
-    it('should be a post', () => {
-      const mockParamPsotId = 3;
-      const mockPostValue = postItems.find(
-        (item) => item.id === mockParamPsotId,
-      );
+    // service 2-2 존재하지 않는 post일때 에러 체크
+    it('존재하지 않는 post일때 에러 체크', async () => {
+      const mockParamPsotId = 999;
 
-      expect(service.getPostById(mockParamPsotId)).toEqual(mockPostValue);
-    });
+      (repository.getPostByIdRepository as jest.Mock).mockReturnValue(null);
 
-    // 2-3 존재 하지 않는 post일때 에러 체크
-    it('should be an error when the post does not exist', () => {
-      const mockParamPsotId = 7;
-
-      // toTHrow를 사용 함수 실행 중 예외가 발생하는지를 확인
-      // 이 때 함수 호출을 콜백으로 전달하여 예외가 발생하는지를 확인
-      // expect(controller.getPostbyId(mockParamPsotId)) - 함수를 호출하여 반환된 값을 테스트합니다.
-      // expect(() => controller.getPostbyId(mockParamPsotId)) - 함수 호출을 콜백 함수로 감싸고 있습니다. 따라서 테스트는 함수를 호출하고 예외가 발생하는지를 확인
-      expect(() => service.getPostById(mockParamPsotId)).toThrow(
+      await expect(service.getPostById(mockParamPsotId)).rejects.toThrow(
         new NotFoundException('post를 찾을 수 없습니다'),
       );
+    });
+
+    // service 2-3 service의 getPostById메서드를 호출 했을때 repository의 리턴 에러가 안나는지 체크
+    it('should be not throw if repository returns', async () => {
+      (repository.getPostByIdRepository as jest.Mock).mockReturnValue(mockData);
+
+      await expect(service.getPostById(1)).resolves.not.toThrow();
+    });
+
+    // service 2-4 service의 getPostById메서드를 호출 했을때 repository의 리턴값이 올바른지 확인
+    it('service의 getPostById메서드를 호출 했을때 repository의 리턴값이 올바른지 확인', async () => {
+      const mockParamPsotId = 1;
+
+      (repository.getPostByIdRepository as jest.Mock).mockReturnValue(mockData);
+
+      expect(await service.getPostById(mockParamPsotId)).toEqual(mockData);
     });
   });
 

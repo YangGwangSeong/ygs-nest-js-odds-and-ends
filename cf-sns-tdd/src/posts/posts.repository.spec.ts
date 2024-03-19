@@ -69,7 +69,7 @@ describe('PostsRepository', () => {
     // 2-3 should be returns findOne find returns
     it('should be returns findOne find returns', async () => {
       (postsRepository.findOne as jest.Mock).mockReturnValue({});
-      expect(await repository.getPostByIdRepository).toEqual({});
+      expect(await repository.getPostByIdRepository(1)).toEqual({});
     });
   });
 });

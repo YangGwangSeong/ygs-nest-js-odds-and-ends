@@ -9,8 +9,10 @@ export class PostsService {
     return await this.postsRepository.getPostsRepository();
   }
 
-  getPostById(postId: number) {
-    const post = postItems.find((item) => item.id === postId);
+  async getPostById(postId: number) {
+    //const post = postItems.find((item) => item.id === postId);
+
+    const post = await this.postsRepository.getPostByIdRepository(postId);
 
     if (!post) throw new NotFoundException('post를 찾을 수 없습니다');
 
