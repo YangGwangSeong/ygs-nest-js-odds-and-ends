@@ -1,8 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity()
 export class PostsModel {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn({ type: 'int4' })
   id: number;
 
   @Column()

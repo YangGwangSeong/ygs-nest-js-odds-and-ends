@@ -7,10 +7,14 @@ import { PostsService } from '../src/posts/posts.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostsModel } from '../src/posts/entities/posts.entity';
+import { PostsRepository } from '../src/posts/posts.repository';
+import { Repository } from 'typeorm';
 
 describe('PostsController E2E Test', () => {
   let app: INestApplication;
   let postsService: PostsService;
+  let postsRepository: Repository<PostsModel>;
+  let mockData: PostsModel;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -45,6 +49,22 @@ describe('PostsController E2E Test', () => {
     await app.init();
 
     postsService = moduleFixture.get<PostsService>(PostsService);
+    postsRepository = moduleFixture.get<PostsRepository>(PostsRepository);
+  });
+
+  beforeEach(async () => {
+    // Clear existing data and insert test data before each test
+    await postsRepository.clear();
+
+    // Insert test data
+    mockData = await postsRepository.save({
+      id: 1,
+      author: 'newjeans_official',
+      title: '뉴진스 민지',
+      content: '멤버들 때문에 버거운 민지',
+      likeCount: 10000000,
+      commentCount: 999999,
+    });
   });
 
   afterAll(async () => {
@@ -62,7 +82,7 @@ describe('PostsController E2E Test', () => {
       const res = await request(app.getHttpServer())
         .get('/posts')
         .expect(HttpStatus.OK);
-      expect(res.body.length).toBe(0);
+      expect(res.body.length).toBe(1);
     });
   });
 
@@ -76,21 +96,21 @@ describe('PostsController E2E Test', () => {
         .get(`/posts/${postId}`)
         .expect(HttpStatus.OK);
 
-      expect(postServSpy).toHaveBeenCalledWith(Number(postId));
+      expect(postServSpy).toHaveBeenCalledWith(Number(1));
     });
 
-    // e2e 2-2 (GET) get Post
-    it('(GET) get Post', async () => {
+    // e2e 2-2 (GET) get Post /posts/:postId
+    it('(GET) get Post /posts/:postId', async () => {
       const postId = '1';
-      const expectedPost = postItems.find(
-        (post) => post.id === parseInt(postId),
-      );
+      // const expectedPost = postItems.find(
+      //   (post) => post.id === parseInt(postId),
+      // );
 
       const res = await request(app.getHttpServer())
         .get(`/posts/${postId}`)
         .expect(HttpStatus.OK);
 
-      expect(res.body).toEqual(expectedPost);
+      expect(res.body).toEqual(mockData);
     });
 
     // e2e 2-3 (GET) get Post Not Found exception 404
