@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { IPost, postItems } from './posts.controller';
 import { PostsRepository } from './posts.repository';
+import { CreatePostDto } from './dto/create-post.dto';
 
 @Injectable()
 export class PostsService {
@@ -19,19 +20,11 @@ export class PostsService {
     return post;
   }
 
-  createPost(author: string, title: string, content: string) {
-    const newPost: IPost = {
-      id: postItems[postItems.length - 1].id + 1,
-      author,
-      title,
-      content,
-      likeCount: 0,
-      commentCount: 0,
-    };
-
-    postItems.push(newPost);
-
-    return newPost;
+  async createPost(createPostArgs: CreatePostDto) {
+    return this.postsRepository.createPostRepository({
+      ...createPostArgs,
+      id: 1,
+    });
   }
 
   updatePost(

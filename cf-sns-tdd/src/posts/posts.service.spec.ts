@@ -1,19 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PostsService } from './posts.service';
-import { IPost, postItems } from './posts.controller';
+import { postItems } from './posts.controller';
 import { NotFoundException } from '@nestjs/common';
-import { PostsRepository } from './posts.repository';
+import { ICreatePostArgs, PostsRepository } from './posts.repository';
 import { PostsModel } from './entities/posts.entity';
 
 describe('PostsService', () => {
   let service: PostsService;
   let repository: PostsRepository;
-  let mockData: PostsModel = new PostsModel(); // 나중에 createPostDto로 대체됨
+  let mockData: PostsModel; // 나중에 createPostDto로 대체됨
+  let createPostDtoArgs: ICreatePostArgs;
 
   beforeEach(async () => {
     const PostsRepositoryMock = {
       getPostsRepository: jest.fn(),
       getPostByIdRepository: jest.fn(),
+      createPostRepository: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -28,12 +30,22 @@ describe('PostsService', () => {
 
     service = module.get<PostsService>(PostsService);
     repository = module.get<PostsRepository>(PostsRepository);
-    mockData.id = 1;
-    mockData.author = '양광성';
-    mockData.commentCount = 0;
-    mockData.content = '테스트 데이터';
-    mockData.likeCount = 0;
-    mockData.title = '제목';
+    mockData = {
+      id: 1,
+      author: 'newjeans_official',
+      title: '뉴진스 혜인',
+      content: '장난 치고 있는 혜인',
+      likeCount: 0,
+      commentCount: 0,
+      created_at: new Date(),
+      updated_at: new Date(),
+    };
+    createPostDtoArgs = {
+      id: mockData.id,
+      title: mockData.title,
+      author: mockData.author,
+      content: mockData.content,
+    };
   });
 
   it('should be defined', () => {
@@ -99,39 +111,27 @@ describe('PostsService', () => {
   });
 
   // service 3 createPost 메서드
-  // describe('createPost', () => {
-  //   // service 3-1 createPost 메서드가 정의 되었는지
-  //   it('should be defined createPost()', () => {
-  //     expect(service.createPost).toBeDefined();
-  //   });
+  describe('createPost', () => {
+    // service 3-1 createPost 메서드가 정의 되었는지
+    it('should be defined createPost()', () => {
+      expect(service.createPost).toBeDefined();
+    });
 
-  //   // service 3-2 postPosts 리턴값이 맞는지 체크
-  //   it('should be correct create post', () => {
-  //     const mockNewPost: Omit<IPost, 'likeCount' | 'commentCount'> = {
-  //       id: postItems[postItems.length - 1].id + 1,
-  //       author: 'newjeans_official',
-  //       title: '뉴진스 혜인',
-  //       content: '장난 치고 있는 혜인',
-  //     };
+    // service 3-2 파라미터값이 올바른지 확인
+    it('service 3-2 파라미터값이 올바른지 확인', async () => {
+      repository.createPostRepository = jest.fn().mockReturnValue(mockData);
+      await service.createPost(createPostDtoArgs);
+      expect(repository.createPostRepository).toHaveBeenCalledWith(
+        createPostDtoArgs,
+      );
+    });
 
-  //     const returnNewPost: IPost = {
-  //       id: 6,
-  //       author: 'newjeans_official',
-  //       title: '뉴진스 혜인',
-  //       content: '장난 치고 있는 혜인',
-  //       likeCount: 0,
-  //       commentCount: 0,
-  //     };
-
-  //     expect(
-  //       service.createPost(
-  //         mockNewPost.author,
-  //         mockNewPost.title,
-  //         mockNewPost.content,
-  //       ),
-  //     ).toEqual(returnNewPost);
-  //   });
-  // });
+    // service 3-3 createPostRepository메서드가 성공적으로 처리 됬을때 리턴값
+    it('service 3-3 createPostRepository메서드가 성공적으로 처리 됬을때 리턴값', async () => {
+      repository.createPostRepository = jest.fn().mockReturnValue(mockData);
+      expect(await service.createPost(createPostDtoArgs)).toEqual(mockData);
+    });
+  });
 
   // service 4 updatePost 메서드
   describe('updatePost', () => {

@@ -78,7 +78,7 @@ export class PostsController {
 
   @Post()
   postPosts(@Body() dto: CreatePostDto) {
-    return this.postsService.createPost(dto.author, dto.title, dto.content);
+    return this.postsService.createPost(dto);
   }
 
   @Patch('/:postId')
