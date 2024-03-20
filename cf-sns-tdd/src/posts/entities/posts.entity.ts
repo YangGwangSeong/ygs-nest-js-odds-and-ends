@@ -1,8 +1,8 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class PostsModel {
-  @PrimaryColumn({ type: 'int4' })
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
@@ -14,10 +14,10 @@ export class PostsModel {
   @Column()
   content: string;
 
-  @Column()
+  @Column({ default: 0 })
   likeCount: number;
 
-  @Column()
+  @Column({ default: 0 })
   commentCount: number;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

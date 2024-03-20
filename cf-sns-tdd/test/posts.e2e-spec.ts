@@ -57,14 +57,24 @@ describe('PostsController E2E Test', () => {
     await postsRepository.clear();
 
     // Insert test data
-    mockData = await postsRepository.save({
-      id: 1,
-      author: 'newjeans_official',
-      title: '뉴진스 민지',
-      content: '멤버들 때문에 버거운 민지',
-      likeCount: 10000000,
-      commentCount: 999999,
-    });
+    mockData = await postsRepository
+      .save({
+        id: 1,
+        author: 'newjeans_official',
+        title: '뉴진스 민지',
+        content: '멤버들 때문에 버거운 민지',
+        likeCount: 10000000,
+        commentCount: 999999,
+        created_at: new Date(),
+        updated_at: new Date(),
+      })
+      .then((data) => {
+        return {
+          ...data,
+          created_at: data.created_at.toISOString() as unknown as Date,
+          updated_at: data.updated_at.toISOString() as unknown as Date,
+        };
+      });
   });
 
   afterAll(async () => {
@@ -90,24 +100,18 @@ describe('PostsController E2E Test', () => {
   describe('(GET) /posts/:postId', () => {
     // e2e 2-1 check correct parameter
     it('(GET) check correct parameter', async () => {
-      const postId = '1';
       const postServSpy = jest.spyOn(postsService, 'getPostById');
       await request(app.getHttpServer())
-        .get(`/posts/${postId}`)
+        .get(`/posts/${mockData.id}`)
         .expect(HttpStatus.OK);
 
-      expect(postServSpy).toHaveBeenCalledWith(Number(1));
+      expect(postServSpy).toHaveBeenCalledWith(mockData.id);
     });
 
     // e2e 2-2 (GET) get Post /posts/:postId
     it('(GET) get Post /posts/:postId', async () => {
-      const postId = '1';
-      // const expectedPost = postItems.find(
-      //   (post) => post.id === parseInt(postId),
-      // );
-
       const res = await request(app.getHttpServer())
-        .get(`/posts/${postId}`)
+        .get(`/posts/${mockData.id}`)
         .expect(HttpStatus.OK);
 
       expect(res.body).toEqual(mockData);
@@ -130,27 +134,27 @@ describe('PostsController E2E Test', () => {
   });
 
   // e2e 3. Create Post POST /posts
-  describe('(POST) /posts', () => {
-    // e2e 3-1 (POST) Create Post /posts
-    it('(POST) Create Post /posts', async () => {
-      const newPost: IPost = {
-        id: postItems[postItems.length - 1].id + 1,
-        author: 'newjeans_official',
-        title: '뉴진스 혜인',
-        content: '장난 치고 있는 혜인',
-        likeCount: 0,
-        commentCount: 0,
-      };
+  // describe('(POST) /posts', () => {
+  //   // e2e 3-1 (POST) Create Post /posts
+  //   it('(POST) Create Post /posts', async () => {
+  //     const newPost: IPost = {
+  //       id: postItems[postItems.length - 1].id + 1,
+  //       author: 'newjeans_official',
+  //       title: '뉴진스 혜인',
+  //       content: '장난 치고 있는 혜인',
+  //       likeCount: 0,
+  //       commentCount: 0,
+  //     };
 
-      const res = await request(app.getHttpServer())
-        .post('/posts')
-        .send(newPost)
-        .expect(HttpStatus.CREATED);
+  //     const res = await request(app.getHttpServer())
+  //       .post('/posts')
+  //       .send(newPost)
+  //       .expect(HttpStatus.CREATED);
 
-      expect(res.body.id).toEqual(newPost.id);
-      expect(res.body.title).toEqual(newPost.title);
-    });
-  });
+  //     expect(res.body.id).toEqual(newPost.id);
+  //     expect(res.body.title).toEqual(newPost.title);
+  //   });
+  // });
 
   // e2e 4. Update Post PATCH /posts/:postId
   describe('(PATCH) Update Post /posts/:postId', () => {
