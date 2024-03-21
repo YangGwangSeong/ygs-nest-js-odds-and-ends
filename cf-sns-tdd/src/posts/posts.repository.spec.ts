@@ -1,14 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ICreatePostArgs, PostsRepository } from './posts.repository';
+import { PostsRepository } from './posts.repository';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { PostsModel } from './entities/posts.entity';
 import { Repository } from 'typeorm';
+import { CreatePostDto } from './dto/create-post.dto';
 
 describe('PostsRepository', () => {
   let repository: PostsRepository;
   let postsRepository: Repository<PostsModel>;
   let mockData: PostsModel;
-  let createPostDtoArgs: ICreatePostArgs;
+  let createPostDtoArgs: CreatePostDto;
 
   beforeEach(async () => {
     const PostsRepositoryMock = {
@@ -42,7 +43,6 @@ describe('PostsRepository', () => {
       updated_at: new Date(),
     };
     createPostDtoArgs = {
-      id: mockData.id,
       title: mockData.title,
       author: mockData.author,
       content: mockData.content,
@@ -83,7 +83,7 @@ describe('PostsRepository', () => {
     it('should be success called with postsRepository findOneBy ', async () => {
       postsRepository.findOne = jest.fn().mockReturnValue({});
 
-      await repository.getPostByIdRepository(1);
+      await repository.getPostByIdRepository(mockData.id);
       expect(postsRepository.findOne).toHaveBeenCalled();
     });
 
@@ -91,7 +91,7 @@ describe('PostsRepository', () => {
     it('should be returns findOne find returns', async () => {
       postsRepository.findOne = jest.fn().mockReturnValue({});
 
-      expect(await repository.getPostByIdRepository(1)).toEqual({});
+      expect(await repository.getPostByIdRepository(mockData.id)).toEqual({});
     });
   });
 

@@ -2,12 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { PostsModel } from './entities/posts.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-
-export interface ICreatePostArgs
-  extends Omit<
-    PostsModel,
-    'created_at' | 'updated_at' | 'likeCount' | 'commentCount'
-  > {}
+import { CreatePostDto } from './dto/create-post.dto';
 
 @Injectable()
 export class PostsRepository extends Repository<PostsModel> {
@@ -26,7 +21,7 @@ export class PostsRepository extends Repository<PostsModel> {
     return await this.repository.findOne({ where: { id: postId } });
   }
 
-  async createPostRepository(createPostArgs: ICreatePostArgs) {
+  async createPostRepository(createPostArgs: CreatePostDto) {
     return await this.repository.save(createPostArgs);
   }
 }

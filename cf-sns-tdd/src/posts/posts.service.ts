@@ -21,10 +21,7 @@ export class PostsService {
   }
 
   async createPost(createPostArgs: CreatePostDto) {
-    return this.postsRepository.createPostRepository({
-      ...createPostArgs,
-      id: 1,
-    });
+    return this.postsRepository.createPostRepository(createPostArgs);
   }
 
   updatePost(

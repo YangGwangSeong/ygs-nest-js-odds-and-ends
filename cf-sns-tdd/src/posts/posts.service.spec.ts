@@ -2,14 +2,15 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PostsService } from './posts.service';
 import { postItems } from './posts.controller';
 import { NotFoundException } from '@nestjs/common';
-import { ICreatePostArgs, PostsRepository } from './posts.repository';
+import { PostsRepository } from './posts.repository';
 import { PostsModel } from './entities/posts.entity';
+import { CreatePostDto } from './dto/create-post.dto';
 
 describe('PostsService', () => {
   let service: PostsService;
   let repository: PostsRepository;
   let mockData: PostsModel; // 나중에 createPostDto로 대체됨
-  let createPostDtoArgs: ICreatePostArgs;
+  let createPostDtoArgs: CreatePostDto;
 
   beforeEach(async () => {
     const PostsRepositoryMock = {
@@ -41,7 +42,6 @@ describe('PostsService', () => {
       updated_at: new Date(),
     };
     createPostDtoArgs = {
-      id: mockData.id,
       title: mockData.title,
       author: mockData.author,
       content: mockData.content,

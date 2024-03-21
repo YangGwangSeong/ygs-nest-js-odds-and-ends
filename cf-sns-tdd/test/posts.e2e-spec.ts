@@ -2,7 +2,7 @@ import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 import { PostsModule } from '../src/posts/posts.module';
-import { IPost, postItems } from '../src/posts/posts.controller';
+import { postItems } from '../src/posts/posts.controller';
 import { PostsService } from '../src/posts/posts.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
