@@ -17,6 +17,7 @@ describe('PostsService', () => {
       getPostsRepository: jest.fn(),
       getPostByIdRepository: jest.fn(),
       createPostRepository: jest.fn(),
+      updatePostRepository: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -140,27 +141,43 @@ describe('PostsService', () => {
       expect(service.updatePost).toBeDefined();
     });
 
-    // service 4-2 param postId가 없으면 에러
-    it('should be an error when the post does not exist', () => {
-      const mockParamPsotId = 7;
-      expect(() => service.updatePost(mockParamPsotId, {})).toThrow(
+    // service 4-2 getPostByIdRepository 파라미터값 맞는지
+    it('getPostByIdRepository 파라미터값 맞는지', async () => {
+      mockData.title = '업데이트된 뉴진스 혜인';
+      repository.getPostByIdRepository = jest.fn().mockReturnValue(mockData);
+      await service.updatePost(mockData.id, createPostDtoArgs);
+      expect(repository.getPostByIdRepository).toHaveBeenCalledWith(
+        mockData.id,
+      );
+    });
+
+    // service 4-3 postId에 해당하는 post가 없다면 404 에러
+    it('postId에 해당하는 post가 없다면 404 에러', async () => {
+      const mockParamPsotId = 999;
+      repository.getPostByIdRepository = jest.fn().mockReturnValue(null);
+
+      await expect(service.updatePost(mockParamPsotId, {})).rejects.toThrow(
         new NotFoundException('post를 찾을 수 없습니다'),
       );
     });
 
-    // service 4-3 리턴값이 맞는지 체크
-    it('should be correct return value', () => {
-      const mockPostId = 2;
-      const mockUpdatePost = {
-        title: '헬로우월드',
-        content: 'hello',
-        author: 'me',
-      };
-      const updatePost = postItems.find((item) => item.id === mockPostId);
-      updatePost.title = mockUpdatePost.title;
+    // servce 4-4 updatePostRepository 메서드 파라미터가 값이 맞는지
+    it('updatePostRepository 메서드 파라미터가 값이 맞는지', async () => {
+      repository.getPostByIdRepository = jest.fn().mockReturnValue(mockData);
 
-      expect(service.updatePost(mockPostId, mockUpdatePost)).toEqual(
-        updatePost,
+      mockData.title = '업데이트된 뉴진스 혜인';
+
+      await service.updatePost(mockData.id, createPostDtoArgs);
+      expect(repository.updatePostRepository).toHaveBeenCalledWith(mockData);
+    });
+
+    // service 4-5 updatePostRepository 메서드가 성공적으로 처리 됬을때 리턴값
+    it('service 4-5 updatePostRepository 메서드가 성공적으로 처리 됬을때 리턴값', async () => {
+      repository.getPostByIdRepository = jest.fn().mockReturnValue(mockData);
+      mockData.title = '업데이트된 뉴진스 혜인';
+      repository.updatePostRepository = jest.fn().mockReturnValue(mockData);
+      expect(await service.updatePost(mockData.id, createPostDtoArgs)).toEqual(
+        mockData,
       );
     });
   });
