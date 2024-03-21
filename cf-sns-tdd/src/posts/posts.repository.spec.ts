@@ -127,4 +127,39 @@ describe('PostsRepository', () => {
       );
     });
   });
+
+  // 4. updatePostRepository()
+  describe('updatePostRepository', () => {
+    // 4-1 updatePostRepository 메서드가 정의 되어 있는지
+    it('updatePostRepository 메서드가 정의 되어 있는지', () => {
+      expect(repository.updatePostRepository).toBeDefined();
+    });
+
+    // 4-2 파라미터값이 올바른지 확인
+    it('파라미터값이 올바른지 확인', async () => {
+      mockData.title = '업데이트된 뉴진스 혜인';
+      postsRepository.save = jest.fn().mockReturnValue(mockData);
+      await repository.updatePostRepository(createPostDtoArgs);
+      expect(postsRepository.save).toHaveBeenCalledWith(createPostDtoArgs);
+    });
+
+    // 4-3 repository save 함수가 에러가 났을때
+    it('repository save 함수가 에러가 났을때', async () => {
+      postsRepository.save = jest.fn().mockRejectedValue(new Error());
+
+      await expect(
+        repository.updatePostRepository(createPostDtoArgs),
+      ).rejects.toThrow();
+    });
+
+    // 4-4 save함수 성공시 리턴값
+    it('save함수 성공시 리턴값', async () => {
+      mockData.title = '업데이트된 뉴진스 혜인';
+      postsRepository.save = jest.fn().mockResolvedValue(mockData);
+
+      expect(await repository.updatePostRepository(createPostDtoArgs)).toEqual(
+        mockData,
+      );
+    });
+  });
 });

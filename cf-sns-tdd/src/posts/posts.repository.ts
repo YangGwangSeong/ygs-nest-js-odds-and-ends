@@ -24,4 +24,8 @@ export class PostsRepository extends Repository<PostsModel> {
   async createPostRepository(createPostArgs: CreatePostDto) {
     return await this.repository.save(createPostArgs);
   }
+
+  async updatePostRepository(updatePostArgs: CreatePostDto) {
+    return await this.repository.save(updatePostArgs);
+  }
 }
