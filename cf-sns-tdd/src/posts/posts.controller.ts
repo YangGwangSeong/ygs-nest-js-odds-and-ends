@@ -78,7 +78,7 @@ export class PostsController {
 
   @Post()
   async postPosts(@Body() dto: CreatePostDto) {
-    return this.postsService.createPost(dto);
+    return await this.postsService.createPost(dto);
   }
 
   @Patch('/:postId')

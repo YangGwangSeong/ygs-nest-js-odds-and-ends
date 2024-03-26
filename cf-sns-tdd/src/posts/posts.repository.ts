@@ -22,7 +22,11 @@ export class PostsRepository extends Repository<PostsModel> {
   }
 
   async createPostRepository(createPostArgs: CreatePostDto) {
-    return await this.repository.save(createPostArgs);
+    return await this.repository.save({
+      content: createPostArgs.content,
+      title: createPostArgs.title,
+      author: createPostArgs.author,
+    });
   }
 
   async updatePostRepository(updatePostArgs: CreatePostDto) {

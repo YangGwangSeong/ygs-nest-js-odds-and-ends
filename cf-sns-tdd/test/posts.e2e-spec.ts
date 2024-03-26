@@ -2,7 +2,6 @@ import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 import { PostsModule } from '../src/posts/posts.module';
-import { postItems } from '../src/posts/posts.controller';
 import { PostsService } from '../src/posts/posts.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -54,10 +53,8 @@ describe('PostsController E2E Test', () => {
   });
 
   beforeEach(async () => {
-    // Clear existing data and insert test data before each test
     await postsRepository.clear();
 
-    // Insert test data
     mockData = await postsRepository
       .save({
         id: 1,
@@ -139,12 +136,13 @@ describe('PostsController E2E Test', () => {
     // e2e 3-1 check correct parameter
     it('(POST) check correct parameter', async () => {
       const createPost: CreatePostDto = {
-        author: '양광성',
-        title: '양광성',
-        content: '양광성',
+        author: 'bug',
+        title: 'bug',
+        content: 'bug',
       };
 
       const postServSpy = jest.spyOn(postsService, 'createPost');
+
       await request(app.getHttpServer())
         .post(`/posts`)
         .send(createPost)
