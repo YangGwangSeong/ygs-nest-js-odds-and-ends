@@ -67,17 +67,17 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Get('/:postId')
-  getPost(@Param('postId') postId: string) {
+  async getPost(@Param('postId') postId: string) {
     return this.postsService.getPostById(+postId);
   }
 
   @Get()
-  getPosts() {
+  async getPosts() {
     return this.postsService.getPosts();
   }
 
   @Post()
-  postPosts(@Body() dto: CreatePostDto) {
+  async postPosts(@Body() dto: CreatePostDto) {
     return this.postsService.createPost(dto);
   }
 
