@@ -5,6 +5,7 @@ import { NotFoundException } from '@nestjs/common';
 import { PostsRepository } from './posts.repository';
 import { PostsModel } from './entities/posts.entity';
 import { CreatePostDto } from './dto/create-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
 
 describe('PostsService', () => {
   let service: PostsService;
@@ -143,9 +144,14 @@ describe('PostsService', () => {
 
     // service 4-2 getPostByIdRepository 파라미터값 맞는지
     it('getPostByIdRepository 파라미터값 맞는지', async () => {
+      const updatePostDto: UpdatePostDto = {
+        title: '업데이트된 뉴진스 혜인',
+      };
+
       mockData.title = '업데이트된 뉴진스 혜인';
+
       repository.getPostByIdRepository = jest.fn().mockReturnValue(mockData);
-      await service.updatePost(mockData.id, createPostDtoArgs);
+      await service.updatePost(mockData.id, updatePostDto);
       expect(repository.getPostByIdRepository).toHaveBeenCalledWith(
         mockData.id,
       );
@@ -165,18 +171,26 @@ describe('PostsService', () => {
     it('updatePostRepository 메서드 파라미터가 값이 맞는지', async () => {
       repository.getPostByIdRepository = jest.fn().mockReturnValue(mockData);
 
+      const updatePostDto: UpdatePostDto = {
+        title: '업데이트된 뉴진스 혜인',
+      };
+
       mockData.title = '업데이트된 뉴진스 혜인';
 
-      await service.updatePost(mockData.id, createPostDtoArgs);
+      await service.updatePost(mockData.id, updatePostDto);
       expect(repository.updatePostRepository).toHaveBeenCalledWith(mockData);
     });
 
     // service 4-5 updatePostRepository 메서드가 성공적으로 처리 됬을때 리턴값
     it('service 4-5 updatePostRepository 메서드가 성공적으로 처리 됬을때 리턴값', async () => {
+      const updatePostDto: UpdatePostDto = {
+        title: '업데이트된 뉴진스 혜인',
+      };
+
       repository.getPostByIdRepository = jest.fn().mockReturnValue(mockData);
       mockData.title = '업데이트된 뉴진스 혜인';
       repository.updatePostRepository = jest.fn().mockReturnValue(mockData);
-      expect(await service.updatePost(mockData.id, createPostDtoArgs)).toEqual(
+      expect(await service.updatePost(mockData.id, updatePostDto)).toEqual(
         mockData,
       );
     });

@@ -4,6 +4,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { PostsModel } from './entities/posts.entity';
 import { Repository } from 'typeorm';
 import { CreatePostDto } from './dto/create-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
 
 describe('PostsRepository', () => {
   let repository: PostsRepository;
@@ -137,27 +138,40 @@ describe('PostsRepository', () => {
 
     // 4-2 파라미터값이 올바른지 확인
     it('파라미터값이 올바른지 확인', async () => {
+      const updatePostDto: UpdatePostDto = {
+        title: '업데이트된 뉴진스 혜인',
+      };
+
       mockData.title = '업데이트된 뉴진스 혜인';
       postsRepository.save = jest.fn().mockReturnValue(mockData);
-      await repository.updatePostRepository(createPostDtoArgs);
-      expect(postsRepository.save).toHaveBeenCalledWith(createPostDtoArgs);
+      await repository.updatePostRepository(updatePostDto);
+      expect(postsRepository.save).toHaveBeenCalledWith(updatePostDto);
     });
 
     // 4-3 repository save 함수가 에러가 났을때
     it('repository save 함수가 에러가 났을때', async () => {
+      const updatePostDto: UpdatePostDto = {
+        title: '업데이트된 뉴진스 혜인',
+      };
+
       postsRepository.save = jest.fn().mockRejectedValue(new Error());
 
       await expect(
-        repository.updatePostRepository(createPostDtoArgs),
+        repository.updatePostRepository(updatePostDto),
       ).rejects.toThrow();
     });
 
     // 4-4 save함수 성공시 리턴값
     it('save함수 성공시 리턴값', async () => {
+      const updatePostDto: UpdatePostDto = {
+        title: '업데이트된 뉴진스 혜인',
+      };
+
       mockData.title = '업데이트된 뉴진스 혜인';
+
       postsRepository.save = jest.fn().mockResolvedValue(mockData);
 
-      expect(await repository.updatePostRepository(createPostDtoArgs)).toEqual(
+      expect(await repository.updatePostRepository(updatePostDto)).toEqual(
         mockData,
       );
     });
