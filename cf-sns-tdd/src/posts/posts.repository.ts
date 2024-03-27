@@ -37,4 +37,8 @@ export class PostsRepository extends Repository<PostsModel> {
       author: updatePostArgs.author,
     });
   }
+
+  async deletePostRepository(postId: number) {
+    await this.repository.delete({ id: postId });
+  }
 }

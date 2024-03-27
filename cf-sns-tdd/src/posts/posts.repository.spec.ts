@@ -5,6 +5,7 @@ import { PostsModel } from './entities/posts.entity';
 import { Repository } from 'typeorm';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { InternalServerErrorException } from '@nestjs/common';
 
 describe('PostsRepository', () => {
   let repository: PostsRepository;
@@ -17,6 +18,7 @@ describe('PostsRepository', () => {
       find: jest.fn(),
       findOne: jest.fn(),
       save: jest.fn(),
+      delete: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -174,6 +176,32 @@ describe('PostsRepository', () => {
       expect(await repository.updatePostRepository(updatePostDto)).toEqual(
         mockData,
       );
+    });
+  });
+
+  // 5. deletePostRepository()
+  describe('deletePostRepository', () => {
+    // 5-1 should be defined deletePostRepository method
+    it('should be defined deletePostRepository method', () => {
+      expect(repository.deletePostRepository).toBeDefined();
+    });
+
+    // 5-2 repository delete 메서드가 제대로 호출 되었는지
+    it('deletePostRepository delete 메서드가 제대로 호출 되었는지', async () => {
+      postsRepository.delete = jest.fn();
+      await repository.deletePostRepository(mockData.id);
+      expect(postsRepository.delete).toHaveBeenCalled();
+    });
+
+    // 5-3 repository delete 함수가 에러가 났을때
+    it('repository delete 함수가 에러가 났을때', async () => {
+      postsRepository.delete = jest
+        .fn()
+        .mockRejectedValue(new InternalServerErrorException());
+
+      await expect(
+        repository.deletePostRepository(mockData.id),
+      ).rejects.toThrow(new InternalServerErrorException());
     });
   });
 });
