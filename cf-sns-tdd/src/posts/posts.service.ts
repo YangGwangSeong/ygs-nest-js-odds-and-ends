@@ -1,5 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { postItems } from './posts.controller';
 import { PostsRepository } from './posts.repository';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -43,9 +42,11 @@ export class PostsService {
     return await this.postsRepository.updatePostRepository(post);
   }
 
-  deletePost(postId: number) {
-    const post = postItems.find((item) => item.id === postId);
+  async deletePost(postId: number) {
+    const post = await this.postsRepository.getPostByIdRepository(postId);
 
     if (!post) throw new NotFoundException('post를 찾을 수 없습니다');
+
+    await this.postsRepository.deletePostRepository(postId);
   }
 }

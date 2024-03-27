@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PostsService } from './posts.service';
-import { postItems } from './posts.controller';
 import { NotFoundException } from '@nestjs/common';
 import { PostsRepository } from './posts.repository';
 import { PostsModel } from './entities/posts.entity';
@@ -19,6 +18,7 @@ describe('PostsService', () => {
       getPostByIdRepository: jest.fn(),
       createPostRepository: jest.fn(),
       updatePostRepository: jest.fn(),
+      deletePostRepository: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -203,12 +203,39 @@ describe('PostsService', () => {
       expect(service.deletePost).toBeDefined();
     });
 
-    // service 5-2 postId가 없으면 에러 체크
-    it('should be an error when the postId by Params', () => {
-      const mockParamPsotId = 7;
-      expect(() => service.deletePost(mockParamPsotId)).toThrow(
+    // service 5-3 getPostByIdRepository 파라미터값 맞는지
+    it('getPostByIdRepository 파라미터값 맞는지', async () => {
+      repository.getPostByIdRepository = jest.fn().mockReturnValue(mockData);
+      await service.deletePost(mockData.id);
+      expect(repository.getPostByIdRepository).toHaveBeenCalledWith(
+        mockData.id,
+      );
+    });
+
+    // service 5-3 postId가 없으면 에러 체크
+    it('should be an error when the postId by Params', async () => {
+      const mockParamPsotId = 999;
+      repository.getPostByIdRepository = jest.fn().mockReturnValue(null);
+
+      await expect(service.deletePost(mockParamPsotId)).rejects.toThrow(
         new NotFoundException('post를 찾을 수 없습니다'),
       );
+    });
+
+    // service 5-4 repository deletePostRepository 메서드 파라미터값 맞는지
+    it('repository deletePostRepository 메서드 파라미터값 맞는지', async () => {
+      repository.getPostByIdRepository = jest.fn().mockReturnValue(mockData);
+
+      await service.deletePost(mockData.id);
+      expect(repository.deletePostRepository).toHaveBeenCalledWith(mockData.id);
+    });
+
+    // service 5-5 repository deletePostRepository 메서드가 정상적으로 호출 되었는지
+    it('repository deletePostRepository 메서드가 정상적으로 호출 되었는지', async () => {
+      repository.getPostByIdRepository = jest.fn().mockReturnValue(mockData);
+
+      await service.deletePost(mockData.id);
+      expect(repository.deletePostRepository).toHaveBeenCalled();
     });
   });
 });
