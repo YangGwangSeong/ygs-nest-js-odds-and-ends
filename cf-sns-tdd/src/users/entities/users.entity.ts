@@ -1,9 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-
-enum RolesEnum {
-  USER = 'user',
-  ADMIN = 'admin',
-}
+import { RolesEnum } from '../const/roles.const';
 
 @Entity()
 export class UsersModel {
