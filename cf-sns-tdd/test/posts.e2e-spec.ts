@@ -216,30 +216,19 @@ describe('PostsController E2E Test', () => {
   });
 
   // e2e 5. DELETE Post DELETE /posts/:postId
-  describe('(DELETE) Update Post /posts/:postId', () => {
+  describe('(DELETE) DELETE Post /posts/:postId', () => {
     // 5-1 (DELETE) check correct parameter
     it('(DELETE) check correct parameter', async () => {
-      const mockPostId = '2';
-
       const postServSpy = jest.spyOn(postsService, 'deletePost');
 
       await request(app.getHttpServer())
-        .delete(`/posts/${mockPostId}`)
+        .delete(`/posts/${mockData.id}`)
         .expect(HttpStatus.OK);
 
-      expect(postServSpy).toHaveBeenCalledWith(Number(mockPostId));
+      expect(postServSpy).toHaveBeenCalledWith(mockData.id);
     });
 
-    // 5-2 (DELETE) delete Post
-    it('(DELETE) delete Post', async () => {
-      const mockPostId = '2';
-
-      await request(app.getHttpServer())
-        .delete(`/posts/${mockPostId}`)
-        .expect(HttpStatus.OK);
-    });
-
-    // 5-3 (DELETE) Post Not Found exception 404 /posts/:postId
+    // 5-2 (DELETE) Post Not Found exception 404 /posts/:postId
     it('(DELETE) Post Not Found exception 404', async () => {
       const postId = '999';
       const res = await request(app.getHttpServer())
@@ -252,6 +241,17 @@ describe('PostsController E2E Test', () => {
         statusCode: 404,
       };
       expect(res.body).toEqual(result);
+    });
+
+    // 5-3 (DELETE) delete Post postsService deletePost 메서드를 호출 하는지
+    it('(DELETE) delete Post', async () => {
+      const postServSpy = jest.spyOn(postsService, 'deletePost');
+
+      await request(app.getHttpServer())
+        .delete(`/posts/${mockData.id}`)
+        .expect(HttpStatus.OK);
+
+      expect(postServSpy).toHaveBeenCalled();
     });
   });
 });

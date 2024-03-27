@@ -82,15 +82,15 @@ export class PostsController {
   }
 
   @Patch('/:postId')
-  patchPost(
+  async patchPost(
     @Param('postId') postId: string,
     @Body() dto: Partial<CreatePostDto>,
   ) {
-    return this.postsService.updatePost(+postId, dto);
+    return await this.postsService.updatePost(+postId, dto);
   }
 
   @Delete('/:postId')
-  deletePost(@Param('postId') postId: string) {
-    return this.postsService.deletePost(+postId);
+  async deletePost(@Param('postId') postId: string) {
+    return await this.postsService.deletePost(+postId);
   }
 }
