@@ -11,4 +11,8 @@ export class UsersRepository extends Repository<UsersModel> {
   ) {
     super(repository.target, repository.manager, repository.queryRunner);
   }
+
+  async getUsersRepository() {
+    return await this.repository.find();
+  }
 }

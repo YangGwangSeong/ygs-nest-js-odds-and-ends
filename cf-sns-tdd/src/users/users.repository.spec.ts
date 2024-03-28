@@ -36,4 +36,19 @@ describe('UsersRepository', () => {
   it('should be defined usersRepository', () => {
     expect(usersRepository).toBeDefined();
   });
+
+  // 1. getUsersRepsotiry()
+  describe('getUsersRepsotiry()', () => {
+    // 1-1 getUsersRepsotiry가 정의 되어 있는지
+    it('getUsersRepsotiry가 정의 되어 있는지', () => {
+      expect(repository.getUsersRepository).toBeDefined();
+    });
+
+    // 1-2 find 메서드의 리턴값이 정상적으로 리턴 되는지
+    it('find 메서드의 리턴값이 정상적으로 리턴 되는지', async () => {
+      usersRepository.find = jest.fn().mockReturnValue([]);
+
+      expect(await repository.getUsersRepository()).toEqual([]);
+    });
+  });
 });
