@@ -111,5 +111,22 @@ describe('UsersController E2E Test', () => {
 
       expect(userServSpy).toHaveBeenCalledWith(createUser);
     });
+
+    // e2e 2-2 (POST) 요청이 정상적일때 리턴값 확인
+    it('(POST) 요청이 정상적일때 리턴값 확인', async () => {
+      const createUser: CreateUserDto = {
+        nickname: 'factory2',
+        email: 'soaw83@gmail.com',
+        password: 'factory',
+      };
+
+      const res = await request(app.getHttpServer())
+        .post(`/users`)
+        .send(createUser)
+        .expect(HttpStatus.CREATED);
+
+      expect(res.body.nickname).toEqual(createUser.nickname);
+      expect(res.body.email).toEqual(createUser.email);
+    });
   });
 });
