@@ -8,6 +8,7 @@ import { UsersModule } from '../src/users/users.module';
 import { UsersRepository } from '../src/users/users.repository';
 import { UsersService } from '../src/users/users.service';
 import { Repository } from 'typeorm';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 describe('UsersController E2E Test', () => {
   let app: INestApplication;
@@ -88,6 +89,27 @@ describe('UsersController E2E Test', () => {
         .get('/users')
         .expect(HttpStatus.OK);
       expect(res.body.length).toBe(1);
+    });
+  });
+
+  // e2e 2. Create User POST /users
+  describe('(POST) /users', () => {
+    // e2e 2-1 파라미터값이 정확한지 확인
+    it('(POST) 파라미터값이 정확한지 확인', async () => {
+      const createUser: CreateUserDto = {
+        nickname: 'factory2',
+        email: 'soaw83@gmail.com',
+        password: 'factory',
+      };
+
+      const userServSpy = jest.spyOn(usersService, 'createUser');
+
+      await request(app.getHttpServer())
+        .post(`/users`)
+        .send(createUser)
+        .expect(HttpStatus.CREATED);
+
+      expect(userServSpy).toHaveBeenCalledWith(createUser);
     });
   });
 });
