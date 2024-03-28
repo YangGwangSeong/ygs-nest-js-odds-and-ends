@@ -1,6 +1,7 @@
-import { INestApplication } from '@nestjs/common';
+import { HttpStatus, INestApplication } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
+import * as request from 'supertest';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModel } from '../src/users/entities/users.entity';
 import { UsersModule } from '../src/users/users.module';
@@ -77,5 +78,16 @@ describe('UsersController E2E Test', () => {
 
   it('should be defined postsService', () => {
     expect(usersService).toBeDefined();
+  });
+
+  // e2e 1. Get All Users Get /posts
+  describe('Users', () => {
+    // e2e 1-1 (GET) All Post Get /posts
+    it('(GET) All Users Get /users', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/users')
+        .expect(HttpStatus.OK);
+      expect(res.body.length).toBe(1);
+    });
   });
 });
