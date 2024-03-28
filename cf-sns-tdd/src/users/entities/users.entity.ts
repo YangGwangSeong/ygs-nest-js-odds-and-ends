@@ -20,6 +20,9 @@ export class UsersModel {
   @Column()
   password: string;
 
-  @Column()
+  @Column({
+    enum: RolesEnum,
+    default: RolesEnum.USER,
+  })
   role: RolesEnum;
 }
