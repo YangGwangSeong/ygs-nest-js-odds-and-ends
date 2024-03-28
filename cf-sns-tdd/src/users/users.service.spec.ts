@@ -87,5 +87,11 @@ describe('UsersService', () => {
         createUserDtoArgs,
       );
     });
+
+    // service 2-3 createUserRepository 메서드가 성공적으로 처리 됬을때 리턴값
+    it('service 2-3 createUserRepository 메서드가 성공적으로 처리 됬을때 리턴값', async () => {
+      repository.createUserRepository = jest.fn().mockReturnValue(mockData);
+      expect(await service.createUser(createUserDtoArgs)).toEqual(mockData);
+    });
   });
 });
