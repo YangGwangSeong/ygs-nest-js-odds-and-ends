@@ -8,4 +8,6 @@ export class UsersService {
   async getAllUsers() {
     return await this.usersRepository.getUsersRepository();
   }
+
+  async createUser() {}
 }

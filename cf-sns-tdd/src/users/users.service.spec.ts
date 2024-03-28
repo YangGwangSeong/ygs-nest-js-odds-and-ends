@@ -51,4 +51,12 @@ describe('UsersService', () => {
       expect(await service.getAllUsers()).toEqual([]);
     });
   });
+
+  // service 2 createUser 메서드
+  describe('createUser', () => {
+    // service 2-1 createUser 메소드가 정의 되었는지
+    it('should be defined createUser()', () => {
+      expect(service.createUser).toBeDefined();
+    });
+  });
 });
