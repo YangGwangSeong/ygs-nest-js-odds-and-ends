@@ -8,8 +8,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostsModel } from '../src/posts/entities/posts.entity';
 import { PostsRepository } from '../src/posts/posts.repository';
 import { Repository } from 'typeorm';
-import { CreatePostDto } from 'src/posts/dto/create-post.dto';
-import { UpdatePostDto } from 'src/posts/dto/update-post.dto';
+import { CreatePostDto } from '../src/posts/dto/create-post.dto';
+import { UpdatePostDto } from '../src/posts/dto/update-post.dto';
+import { UsersModel } from '../src/users/entities/users.entity';
 
 describe('PostsController E2E Test', () => {
   let app: INestApplication;
@@ -35,7 +36,7 @@ describe('PostsController E2E Test', () => {
               username: configService.get('DB_USERNAME'),
               database: configService.get('DB_DATABASE'),
               password: configService.get('DB_PASSWORD'),
-              entities: [PostsModel],
+              entities: [PostsModel, UsersModel],
               synchronize: configService.get<boolean>('DB_SYNCHRONIZE'),
             };
 
@@ -59,8 +60,8 @@ describe('PostsController E2E Test', () => {
     mockData = await postsRepository
       .save({
         id: 1,
-        author: 'newjeans_official',
         title: '뉴진스 민지',
+        authorId: 1,
         content: '멤버들 때문에 버거운 민지',
         likeCount: 10000000,
         commentCount: 999999,
@@ -137,7 +138,7 @@ describe('PostsController E2E Test', () => {
     // e2e 3-1 check correct parameter
     it('(POST) check correct parameter', async () => {
       const createPost: CreatePostDto = {
-        author: 'bug',
+        authorId: 1,
         title: 'bug',
         content: 'bug',
       };
@@ -155,7 +156,7 @@ describe('PostsController E2E Test', () => {
     // e2e 3-2 (POST) Create Post /posts
     it('(POST) Create Post /posts', async () => {
       const createPost: CreatePostDto = {
-        author: '양광성',
+        authorId: 1,
         title: '양광성',
         content: '양광성',
       };
@@ -166,7 +167,6 @@ describe('PostsController E2E Test', () => {
         .expect(HttpStatus.CREATED);
 
       expect(res.body.title).toEqual(createPost.title);
-      expect(res.body.author).toEqual(createPost.author);
       expect(res.body.content).toEqual(createPost.content);
     });
   });
