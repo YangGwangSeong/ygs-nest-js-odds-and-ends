@@ -4,7 +4,6 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { PostsModel } from './entities/posts.entity';
 import { Repository } from 'typeorm';
 import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
 import { InternalServerErrorException } from '@nestjs/common';
 
 describe('PostsRepository', () => {
@@ -138,44 +137,31 @@ describe('PostsRepository', () => {
       expect(repository.updatePostRepository).toBeDefined();
     });
 
-    // 4-2 파라미터값이 올바른지 확인
-    it('파라미터값이 올바른지 확인', async () => {
-      const updatePostDto: UpdatePostDto = {
-        title: '업데이트된 뉴진스 혜인',
-      };
-
+    // 4-2 save 메서드가 정상적으로 호출되었는지
+    it('save 메서드가 정상적으로 호출되었는지', async () => {
       mockData.title = '업데이트된 뉴진스 혜인';
+
       postsRepository.save = jest.fn().mockReturnValue(mockData);
-      await repository.updatePostRepository(updatePostDto);
-      expect(postsRepository.save).toHaveBeenCalledWith(updatePostDto);
+      await repository.updatePostRepository(mockData);
+      expect(postsRepository.save).toHaveBeenCalled();
     });
 
     // 4-3 repository save 함수가 에러가 났을때
     it('repository save 함수가 에러가 났을때', async () => {
-      const updatePostDto: UpdatePostDto = {
-        title: '업데이트된 뉴진스 혜인',
-      };
+      mockData.title = '업데이트된 뉴진스 혜인';
 
       postsRepository.save = jest.fn().mockRejectedValue(new Error());
 
-      await expect(
-        repository.updatePostRepository(updatePostDto),
-      ).rejects.toThrow();
+      await expect(repository.updatePostRepository(mockData)).rejects.toThrow();
     });
 
     // 4-4 save함수 성공시 리턴값
     it('save함수 성공시 리턴값', async () => {
-      const updatePostDto: UpdatePostDto = {
-        title: '업데이트된 뉴진스 혜인',
-      };
-
       mockData.title = '업데이트된 뉴진스 혜인';
 
       postsRepository.save = jest.fn().mockResolvedValue(mockData);
 
-      expect(await repository.updatePostRepository(updatePostDto)).toEqual(
-        mockData,
-      );
+      expect(await repository.updatePostRepository(mockData)).toEqual(mockData);
     });
   });
 

@@ -11,12 +11,17 @@ import { Repository } from 'typeorm';
 import { CreatePostDto } from '../src/posts/dto/create-post.dto';
 import { UpdatePostDto } from '../src/posts/dto/update-post.dto';
 import { UsersModel } from '../src/users/entities/users.entity';
+import { UsersModule } from '../src/users/users.module';
+import { UsersRepository } from '../src/users/users.repository';
+import { ClearDatabase } from './utils/clear-database';
 
 describe('PostsController E2E Test', () => {
   let app: INestApplication;
   let postsService: PostsService;
   let postsRepository: Repository<PostsModel>;
+  let usersRepository: Repository<UsersModel>;
   let mockData: PostsModel;
+  let userMockData: UsersModel;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -44,6 +49,7 @@ describe('PostsController E2E Test', () => {
           },
         }),
         PostsModule,
+        UsersModule,
       ],
     }).compile();
 
@@ -52,16 +58,22 @@ describe('PostsController E2E Test', () => {
 
     postsService = moduleFixture.get<PostsService>(PostsService);
     postsRepository = moduleFixture.get<PostsRepository>(PostsRepository);
+    usersRepository = moduleFixture.get<UsersRepository>(UsersRepository);
   });
 
   beforeEach(async () => {
-    await postsRepository.clear();
+    userMockData = await usersRepository.save({
+      nickname: 'sgov',
+      email: 'rhkdtjd_12@naver.com',
+      password: 'factory',
+      created_at: new Date(),
+      updated_at: new Date(),
+    });
 
     mockData = await postsRepository
       .save({
-        id: 1,
         title: '뉴진스 민지',
-        authorId: 1,
+        authorId: userMockData.id,
         content: '멤버들 때문에 버거운 민지',
         likeCount: 10000000,
         commentCount: 999999,
@@ -75,6 +87,10 @@ describe('PostsController E2E Test', () => {
           updated_at: data.updated_at.toISOString() as unknown as Date,
         };
       });
+  });
+
+  afterEach(async () => {
+    await ClearDatabase(app);
   });
 
   afterAll(async () => {
@@ -92,7 +108,7 @@ describe('PostsController E2E Test', () => {
       const res = await request(app.getHttpServer())
         .get('/posts')
         .expect(HttpStatus.OK);
-      expect(res.body.length).toBe(1);
+      expect(res.body[0]).toEqual(mockData);
     });
   });
 
@@ -138,7 +154,7 @@ describe('PostsController E2E Test', () => {
     // e2e 3-1 check correct parameter
     it('(POST) check correct parameter', async () => {
       const createPost: CreatePostDto = {
-        authorId: 1,
+        authorId: userMockData.id,
         title: 'bug',
         content: 'bug',
       };
@@ -156,7 +172,7 @@ describe('PostsController E2E Test', () => {
     // e2e 3-2 (POST) Create Post /posts
     it('(POST) Create Post /posts', async () => {
       const createPost: CreatePostDto = {
-        authorId: 1,
+        authorId: userMockData.id,
         title: '양광성',
         content: '양광성',
       };

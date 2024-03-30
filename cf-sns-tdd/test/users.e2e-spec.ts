@@ -8,7 +8,9 @@ import { UsersModule } from '../src/users/users.module';
 import { UsersRepository } from '../src/users/users.repository';
 import { UsersService } from '../src/users/users.service';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { CreateUserDto } from '../src/users/dto/create-user.dto';
+import { PostsModel } from '../src/posts/entities/posts.entity';
+import { ClearDatabase } from './utils/clear-database';
 
 describe('UsersController E2E Test', () => {
   let app: INestApplication;
@@ -34,7 +36,7 @@ describe('UsersController E2E Test', () => {
               username: configService.get('DB_USERNAME'),
               database: configService.get('DB_DATABASE'),
               password: configService.get('DB_PASSWORD'),
-              entities: [UsersModel],
+              entities: [UsersModel, PostsModel],
               synchronize: configService.get<boolean>('DB_SYNCHRONIZE'),
             };
 
@@ -53,31 +55,23 @@ describe('UsersController E2E Test', () => {
   });
 
   beforeEach(async () => {
-    await usersRepository.clear();
+    mockData = await usersRepository.save({
+      id: 1,
+      nickname: 'factory2',
+      email: 'soaw83@gmail.com',
+      password: 'factory',
+    });
+  });
 
-    mockData = await usersRepository
-      .save({
-        id: 1,
-        nickname: 'factory',
-        email: 'rhkdtjd_12@naver.com',
-        password: 'factory',
-        created_at: new Date(),
-        updated_at: new Date(),
-      })
-      .then((data) => {
-        return {
-          ...data,
-          created_at: data.created_at.toISOString() as unknown as Date,
-          updated_at: data.updated_at.toISOString() as unknown as Date,
-        };
-      });
+  afterEach(async () => {
+    await ClearDatabase(app);
   });
 
   afterAll(async () => {
     await app.close();
   });
 
-  it('should be defined postsService', () => {
+  it('should be defined usersService', () => {
     expect(usersService).toBeDefined();
   });
 
@@ -88,7 +82,7 @@ describe('UsersController E2E Test', () => {
       const res = await request(app.getHttpServer())
         .get('/users')
         .expect(HttpStatus.OK);
-      expect(res.body.length).toBe(1);
+      expect(res.body[0]).toEqual(mockData);
     });
   });
 
@@ -97,8 +91,8 @@ describe('UsersController E2E Test', () => {
     // e2e 2-1 파라미터값이 정확한지 확인
     it('(POST) 파라미터값이 정확한지 확인', async () => {
       const createUser: CreateUserDto = {
-        nickname: 'factory2',
-        email: 'soaw83@gmail.com',
+        nickname: 'yangdev',
+        email: 'soawn83@nate.com',
         password: 'factory',
       };
 
@@ -115,8 +109,8 @@ describe('UsersController E2E Test', () => {
     // e2e 2-2 (POST) 요청이 정상적일때 리턴값 확인
     it('(POST) 요청이 정상적일때 리턴값 확인', async () => {
       const createUser: CreateUserDto = {
-        nickname: 'factory2',
-        email: 'soaw83@gmail.com',
+        nickname: 'yangdev',
+        email: 'soawn83@nate.com',
         password: 'factory',
       };
 

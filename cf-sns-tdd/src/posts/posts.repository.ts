@@ -3,7 +3,6 @@ import { Repository } from 'typeorm';
 import { PostsModel } from './entities/posts.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
 
 @Injectable()
 export class PostsRepository extends Repository<PostsModel> {
@@ -30,10 +29,15 @@ export class PostsRepository extends Repository<PostsModel> {
     });
   }
 
-  async updatePostRepository(updatePostArgs: UpdatePostDto) {
+  async updatePostRepository(updatePostArgs: PostsModel) {
     return await this.repository.save({
+      id: updatePostArgs.id,
+      authorId: updatePostArgs.authorId,
       title: updatePostArgs.title,
       content: updatePostArgs.content,
+      likeCount: updatePostArgs.likeCount,
+      commentCount: updatePostArgs.commentCount,
+      created_at: updatePostArgs.created_at,
     });
   }
 
