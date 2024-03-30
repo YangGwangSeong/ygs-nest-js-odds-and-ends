@@ -37,7 +37,7 @@ describe('PostsRepository', () => {
     );
     mockData = {
       id: 1,
-      author: 'newjeans_official',
+      authorId: 1,
       title: '뉴진스 혜인',
       content: '장난 치고 있는 혜인',
       likeCount: 0,
@@ -47,7 +47,7 @@ describe('PostsRepository', () => {
     };
     createPostDtoArgs = {
       title: mockData.title,
-      author: mockData.author,
+      authorId: mockData.authorId,
       content: mockData.content,
     };
   });

@@ -26,7 +26,7 @@ export class PostsRepository extends Repository<PostsModel> {
     return await this.repository.save({
       content: createPostArgs.content,
       title: createPostArgs.title,
-      author: createPostArgs.author,
+      authorId: createPostArgs.authorId,
     });
   }
 
@@ -34,7 +34,6 @@ export class PostsRepository extends Repository<PostsModel> {
     return await this.repository.save({
       title: updatePostArgs.title,
       content: updatePostArgs.content,
-      author: updatePostArgs.author,
     });
   }
 

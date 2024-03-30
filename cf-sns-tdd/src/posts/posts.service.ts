@@ -22,7 +22,7 @@ export class PostsService {
     return await this.postsRepository.createPostRepository(createPostArgs);
   }
 
-  async updatePost(postId: number, { author, title, content }: UpdatePostDto) {
+  async updatePost(postId: number, { title, content }: UpdatePostDto) {
     const post = await this.postsRepository.getPostByIdRepository(postId);
 
     if (!post) throw new NotFoundException('post를 찾을 수 없습니다');
@@ -33,10 +33,6 @@ export class PostsService {
 
     if (content) {
       post.content = content;
-    }
-
-    if (author) {
-      post.author = author;
     }
 
     return await this.postsRepository.updatePostRepository(post);

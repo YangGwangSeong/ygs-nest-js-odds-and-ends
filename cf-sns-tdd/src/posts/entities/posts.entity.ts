@@ -1,15 +1,25 @@
-import { UsersModel } from 'src/users/entities/users.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { UsersModel } from '../../users/entities/users.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class PostsModel {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column('int4', { nullable: false })
+  public readonly authorId: number;
+
   @ManyToOne(() => UsersModel, (user) => user.posts, {
     nullable: false,
   })
-  author: UsersModel;
+  @JoinColumn({ name: 'authorId', referencedColumnName: 'id' })
+  author?: UsersModel;
 
   @Column()
   title: string;

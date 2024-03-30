@@ -1,5 +1,5 @@
 services:
-  postgres:
+  postgres-cf-tdd:
     image: postgres:15
     restart: always
     volumes:
@@ -9,7 +9,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
+      POSTGRES_DB: postgres-cf-tdd
 
   postgres-test:
     image: postgres:15
