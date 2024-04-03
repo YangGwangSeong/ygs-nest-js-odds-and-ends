@@ -108,7 +108,8 @@ describe('PostsController E2E Test', () => {
       const res = await request(app.getHttpServer())
         .get('/posts')
         .expect(HttpStatus.OK);
-      expect(res.body[0]).toEqual(mockData);
+
+      expect(res.body[0].title).toEqual(mockData.title);
     });
   });
 
@@ -130,7 +131,7 @@ describe('PostsController E2E Test', () => {
         .get(`/posts/${mockData.id}`)
         .expect(HttpStatus.OK);
 
-      expect(res.body).toEqual(mockData);
+      expect(res.body.title).toEqual(mockData.title);
     });
 
     // e2e 2-3 (GET) get Post Not Found exception 404

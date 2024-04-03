@@ -14,11 +14,20 @@ export class PostsRepository extends Repository<PostsModel> {
   }
 
   async getPostsRepository() {
-    return await this.repository.find();
+    return await this.repository.find({
+      relations: {
+        author: true,
+      },
+    });
   }
 
   async getPostByIdRepository(postId: number) {
-    return await this.repository.findOne({ where: { id: postId } });
+    return await this.repository.findOne({
+      relations: {
+        author: true,
+      },
+      where: { id: postId },
+    });
   }
 
   async createPostRepository(createPostArgs: CreatePostDto) {

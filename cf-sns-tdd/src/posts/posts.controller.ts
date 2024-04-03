@@ -17,12 +17,12 @@ export class PostsController {
 
   @Get('/:postId')
   async getPost(@Param('postId') postId: string) {
-    return this.postsService.getPostById(+postId);
+    return await this.postsService.getPostById(+postId);
   }
 
   @Get()
   async getPosts() {
-    return this.postsService.getPosts();
+    return await this.postsService.getPosts();
   }
 
   @Post()
