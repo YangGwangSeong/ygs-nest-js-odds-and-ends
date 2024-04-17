@@ -11,6 +11,7 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
+      "@PRISMA": ["db"],
       "@APP": ["src/application"],
       "@INFRA/*": ["src/infrastructure/*"],
       "@INTERFACE/*": ["src/api/interface/*"],

@@ -6,11 +6,14 @@ import helmet from 'helmet';
 
 import { InfraModule } from './infrastructure/infra.module';
 import { Configuration } from '@INFRA/config';
+import { prisma } from '@INFRA/DB';
 
 export namespace Backend {
   export const start = async (
     options: NestApplicationOptions = {},
   ): Promise<INestApplication> => {
+    await prisma.$connect();
+
     const app = await NestFactory.create(
       await DynamicModule.mount(`${__dirname}/controller`, {
         imports: [InfraModule],
@@ -33,5 +36,6 @@ export namespace Backend {
 
   export const end = async (app: INestApplication) => {
     await app.close();
+    await prisma.$disconnect();
   };
 }
