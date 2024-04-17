@@ -14,7 +14,7 @@
       "@PRISMA": ["db"],
       "@APP": ["src/application"],
       "@INFRA/*": ["src/infrastructure/*"],
-      "@INTERFACE/*": ["src/api/interface/*"],
+      "@DTO/*": ["src/api/structure/*"],
       "@UTIL": ["src/util"]
     },
     "incremental": true,
