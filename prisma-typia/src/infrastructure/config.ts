@@ -12,7 +12,7 @@ const init = () => {
       break;
     case 'production':
     default:
-      // not use .env file
+      dotenv.config({ path: '.env.production' });
       break;
   }
 
