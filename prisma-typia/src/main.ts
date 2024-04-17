@@ -1,8 +1,7 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { Logger } from '@INFRA/logger';
+import { Backend } from './application';
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  await app.listen(3000);
-}
-bootstrap();
+Backend.start({
+  logger: Logger.get(),
+  cors: { credentials: true },
+});

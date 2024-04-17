@@ -9,16 +9,23 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
-    "start:dev": "nest start --watch",
+    "start:dev": "NODE_ENV=development nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "NODE_ENV=production node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prepare": "ts-patch install && typia patch"
+    "prepare": "ts-patch install && typia patch",
+    "swagger": "NODE_ENV=development nestia swagger",
+    "sdk": "rimraf ./src/api/functional && NODE_ENV=development nestia sdk && find ./src/api -type f -exec sed -i '' 's/\\r$//' {} \\;",
+    "nestia": "npm run swagger ; npm run sdk",
+    "schema": "ls ./prisma/schema/*.prisma | xargs cat > ./prisma/schema.prisma",
+    "db:update": "rimraf db && npm run schema && prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:dashboard": "prisma studio"
   },
   "dependencies": {
     "@nestia/core": "^2.4.7",
@@ -27,6 +34,9 @@
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.4.5",
+    "helmet": "^7.1.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
     "typia": "^5.4.1"
@@ -36,6 +46,8 @@
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
+    "@prisma/client": "^5.12.1",
+    "@types/cookie-parser": "^1.4.7",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.2",
     "@types/node": "^20.3.1",
@@ -48,6 +60,7 @@
     "jest": "^29.5.0",
     "nestia": "^5.2.1",
     "prettier": "^3.0.0",
+    "prisma": "^5.12.1",
     "source-map-support": "^0.5.21",
     "supertest": "^6.3.3",
     "ts-jest": "^29.1.0",
@@ -73,5 +86,8 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "prisma": {
+    "schema": "prisma/schema.prisma"
   }
 }
