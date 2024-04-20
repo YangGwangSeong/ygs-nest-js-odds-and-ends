@@ -7,3 +7,4 @@ $ npm i dotenv
 $ npm i helmet
 $ npm i cookie-parser
 $ npm i -D @types/cookie-parser
+$ npm i -D rimraf
