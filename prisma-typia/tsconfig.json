@@ -15,7 +15,8 @@
       "@APP": ["src/application"],
       "@INFRA/*": ["src/infrastructure/*"],
       "@DTO/*": ["src/api/structures/*"],
-      "@UTIL": ["src/utils"]
+      "@UTIL": ["src/utils"],
+      "@APP/*": ["src/app/*"]
     },
     "incremental": true,
     "skipLibCheck": true,
